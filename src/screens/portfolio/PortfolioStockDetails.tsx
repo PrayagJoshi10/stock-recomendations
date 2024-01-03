@@ -4,7 +4,7 @@ import moment from 'moment-timezone';
 import axios from 'axios';
 import ScreenHeader from '../../components/headers/ScreenHeader';
 import Images from '../../utils/Images';
-import {formatedDate} from '../../utils/Helper';
+import {formatedDate, getData, setData} from '../../utils/Helper';
 import Colors from '../../utils/Colors';
 import {
   responsiveHeight,
@@ -14,6 +14,7 @@ import Fonts from '../../utils/Fonts';
 import LinearGradient from 'react-native-linear-gradient';
 import {StockInfo} from '../../utils/Types';
 import Loader from '../../components/loaders/Loader';
+import EditPortfolioStockModal from '../../components/modals/EditPortfolioStockModal';
 
 interface Props {
   navigation: any;
@@ -21,10 +22,12 @@ interface Props {
 }
 
 const PortfolioStockDetails = ({route, navigation}: Props) => {
-  const {Symbol, Date, Quantity} = route?.params?.item;
+  const {Symbol, Date, Quantity, Id, Price} = route?.params?.item;
 
-  const [data, setData] = useState<StockInfo>();
+  const [data, setDataa] = useState<StockInfo>();
   const [loading, setLoading] = useState<boolean>(false);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [quantityy, setQuantity] = useState<string>(Quantity);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,11 +36,11 @@ const PortfolioStockDetails = ({route, navigation}: Props) => {
           .utc(Date)
           .tz('Asia/Kolkata')
           .format('YYYY-MM-DD');
-        const apiUrl = `https://stock-market-lo24myw5sq-el.a.run.app/data?ticker=${Symbol}&date=${istTimestamp}&qty=${Quantity}`;
+        const apiUrl = `https://stock-market-lo24myw5sq-el.a.run.app/data?ticker=${Symbol}&date=${istTimestamp}&qty=${quantityy}`;
 
         const response = await axios.get(apiUrl);
 
-        setData(response?.data?.StockInfo);
+        setDataa(response?.data?.StockInfo);
 
         setLoading(false);
       } catch (error) {
@@ -46,9 +49,25 @@ const PortfolioStockDetails = ({route, navigation}: Props) => {
       }
     };
 
-    fetchData();
+    quantityy && fetchData();
     setLoading(true);
-  }, [Date, Quantity, Symbol]);
+  }, [Date, Quantity, Symbol, quantityy]);
+
+  const onEdit = async (price: string, quantity: string) => {
+    const portfolioList = await getData('portfolio-items');
+
+    const newPortfolioList = portfolioList.map((item: any) => {
+      if (item.Id === Id) {
+        // Modify the properties of the item as needed
+        item.Price = price ? price : Price; // Example modification
+        item.Quantity = quantity ? quantity : Quantity; // Another example modification
+      }
+      return item;
+    });
+    await setData('portfolio-items', newPortfolioList);
+    quantity && setQuantity(quantity);
+    setModalVisible(false);
+  };
 
   return (
     <View style={styles.container}>
@@ -67,7 +86,7 @@ const PortfolioStockDetails = ({route, navigation}: Props) => {
             </View>
           </View>
           <View style={styles.stockPriceContainer}>
-            <Text style={styles.percentageChange}>Qty: {Quantity}</Text>
+            <Text style={styles.percentageChange}>Qty: {quantityy}</Text>
           </View>
         </View>
         <View style={styles.targetDetailsContainer}>
@@ -75,7 +94,9 @@ const PortfolioStockDetails = ({route, navigation}: Props) => {
             <Text style={styles.currentPriceLabel}>
               Current Price: ₹ {data?.Stock?.Values?.LTP || '--'}
             </Text>
-            <TouchableOpacity style={styles.editButton}>
+            <TouchableOpacity
+              style={styles.editButton}
+              onPress={() => setModalVisible(true)}>
               <View style={styles.editButtonContainer}>
                 <Text style={styles.editButtonLabel}>Edit</Text>
               </View>
@@ -135,6 +156,12 @@ const PortfolioStockDetails = ({route, navigation}: Props) => {
           </Text>
         </View>
         {loading && <Loader />}
+        <EditPortfolioStockModal
+          modalVisible={modalVisible}
+          onPress={(price: string, quantity: string) => {
+            onEdit(price, quantity);
+          }}
+        />
       </View>
     </View>
   );

@@ -19,7 +19,6 @@ import {
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
 import Fonts from '../../utils/Fonts';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {PortfolioCardTypes} from '../../utils/Types';
 
 interface Props {
@@ -28,8 +27,16 @@ interface Props {
 }
 
 const StockDetails = ({route, navigation}: Props) => {
-  const {Symbol, Date, PercentageChange, High, Low, Close, Open, logo} =
-    route?.params?.item;
+  const {
+    Symbol,
+    Date: BuyDate,
+    PercentageChange,
+    High,
+    Low,
+    Close,
+    Open,
+    logo,
+  } = route?.params?.item;
 
   const [quantity, setQuantity] = useState('');
   const [price, setPrice] = useState('');
@@ -73,10 +80,10 @@ const StockDetails = ({route, navigation}: Props) => {
     }
 
     try {
-      const portfolioList = await getData();
+      const portfolioList = await getData('portfolio-items');
       const existingItem = portfolioList.find(
         (item: PortfolioCardTypes) =>
-          item.Symbol === Symbol && item.Date === Date,
+          item.Symbol === Symbol && item.Date === BuyDate,
       );
 
       if (existingItem) {
@@ -87,13 +94,14 @@ const StockDetails = ({route, navigation}: Props) => {
         return;
       }
       await portfolioList.push({
+        Id: new Date(),
         Symbol: Symbol,
-        Date: Date,
+        Date: BuyDate,
         Quantity: quantity,
         Price: price,
         Logo: logo,
       });
-      await setData(portfolioList);
+      await setData('portfolio-items', portfolioList);
       setQuantity('');
       setPrice('');
       Alert.alert('Success', 'Added to portfolio succesfully.');
@@ -125,7 +133,7 @@ const StockDetails = ({route, navigation}: Props) => {
           />
           <View style={styles.stockLabelContainer}>
             <Text style={styles.stockName}>{Symbol}</Text>
-            <Text style={styles.stockDate}>{formatedDate(Date)}</Text>
+            <Text style={styles.stockDate}>{formatedDate(BuyDate)}</Text>
           </View>
         </View>
         <View style={styles.stockPriceContainer}>

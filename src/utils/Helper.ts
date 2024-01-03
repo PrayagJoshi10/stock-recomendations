@@ -10,9 +10,9 @@ export const formatedDate = (date: string) => {
   });
 };
 
-export const getData = async () => {
+export const getData = async (key: string) => {
   try {
-    const jsonValue = await AsyncStorage.getItem('portfolio-items');
+    const jsonValue = await AsyncStorage.getItem(key);
     return jsonValue != null ? JSON.parse(jsonValue) : [];
   } catch (e) {
     // error reading value
@@ -20,10 +20,10 @@ export const getData = async () => {
   }
 };
 
-export const setData = async (value: any) => {
+export const setData = async (key: string, value: any) => {
   try {
     const jsonValue = JSON.stringify(value);
-    await AsyncStorage.setItem('portfolio-items', jsonValue);
+    await AsyncStorage.setItem(key, jsonValue);
   } catch (e) {
     // saving error
     console.log('Error: ', e);
