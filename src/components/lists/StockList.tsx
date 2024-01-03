@@ -1,0 +1,61 @@
+import {FlatList, StyleSheet, Text, View} from 'react-native';
+import React from 'react';
+import {responsiveWidth} from 'react-native-responsive-dimensions';
+import Colors from '../../utils/Colors';
+import Fonts from '../../utils/Fonts';
+import StockDetailCard from '../cards/StockDetailCard';
+import {StockListResponse} from '../../utils/Types';
+import {ROUTES} from '../../navigation/Routes';
+import {NavigationProp, ParamListBase} from '@react-navigation/native';
+
+interface Props {
+  data: StockListResponse[];
+  navigation: NavigationProp<ParamListBase>;
+}
+
+const StockList = ({data, navigation}: Props) => {
+  return (
+    <View style={styles.container}>
+      <FlatList
+        data={data}
+        renderItem={({item}) => {
+          return (
+            <StockDetailCard
+              item={item}
+              onPress={() =>
+                navigation.navigate(ROUTES.HOMESTACK.STOCK_DETAILS, {
+                  item: item,
+                })
+              }
+            />
+          );
+        }}
+        showsVerticalScrollIndicator={false}
+        ListFooterComponent={<View />}
+        ListHeaderComponent={
+          <View style={styles.header}>
+            <Text style={styles.headerLabel}>Todays Recomendations</Text>
+          </View>
+        }
+      />
+    </View>
+  );
+};
+
+export default StockList;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginTop: 24,
+  },
+  header: {
+    paddingVertical: 10,
+    paddingHorizontal: responsiveWidth(5.3),
+  },
+  headerLabel: {
+    color: Colors.gray_700,
+    fontSize: 16,
+    fontFamily: Fonts.urbanist_700,
+  },
+});
