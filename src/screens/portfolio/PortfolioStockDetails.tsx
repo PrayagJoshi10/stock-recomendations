@@ -1,4 +1,4 @@
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import moment from 'moment-timezone';
 import axios from 'axios';
@@ -38,6 +38,7 @@ const PortfolioStockDetails = ({route, navigation}: Props) => {
         const response = await axios.get(apiUrl);
 
         setData(response?.data?.StockInfo);
+
         setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -70,9 +71,16 @@ const PortfolioStockDetails = ({route, navigation}: Props) => {
           </View>
         </View>
         <View style={styles.targetDetailsContainer}>
-          <Text style={styles.currentPriceLabel}>
-            Current Price: ₹ {data?.Stock?.Values?.LTP || '--'}
-          </Text>
+          <View style={styles.editContainer}>
+            <Text style={styles.currentPriceLabel}>
+              Current Price: ₹ {data?.Stock?.Values?.LTP || '--'}
+            </Text>
+            <TouchableOpacity style={styles.editButton}>
+              <View style={styles.editButtonContainer}>
+                <Text style={styles.editButtonLabel}>Edit</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
           <LinearGradient
             colors={['#F2FBFF', '#dceff7', '#EDF7FF']}
             start={{x: 0, y: 0}}
@@ -123,7 +131,7 @@ const PortfolioStockDetails = ({route, navigation}: Props) => {
             Total Profit: ₹ {data?.TotalProfit?.Profit || '--'}
           </Text>
           <Text style={styles.currentPriceLabel}>
-            Trade Status: {data?.TotalProfit?.['Trade Status']}
+            Trade Status: {data?.Entry?.['Trade Status']}
           </Text>
         </View>
         {loading && <Loader />}
@@ -182,11 +190,32 @@ const styles = StyleSheet.create({
     paddingHorizontal: responsiveWidth(5.3),
     marginTop: 40,
   },
+  editContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  editButton: {},
+  editButtonContainer: {
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    backgroundColor: Colors.green_100,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderColor: Colors.green_700,
+    borderWidth: 0.5,
+  },
+  editButtonLabel: {
+    color: Colors.green_700,
+    fontSize: 14,
+    fontFamily: Fonts.urbanist_600,
+  },
   currentPriceLabel: {
     color: Colors.gray_700,
     fontSize: 16,
     fontFamily: Fonts.urbanist_600,
-    marginBottom: 20,
   },
   gradientContainer: {
     padding: 20,
