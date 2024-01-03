@@ -18,7 +18,6 @@ interface Props {
 
 const PortfolioCard = ({item, onPress}: Props) => {
   const {Symbol, Date, Quantity, Logo} = item;
-  console.log(item);
 
   return (
     <TouchableOpacity onPress={onPress} style={styles.container}>

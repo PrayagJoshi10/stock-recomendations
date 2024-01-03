@@ -13,6 +13,7 @@ import {
 import Fonts from '../../utils/Fonts';
 import LinearGradient from 'react-native-linear-gradient';
 import {StockInfo} from '../../utils/Types';
+import Loader from '../../components/loaders/Loader';
 
 interface Props {
   navigation: any;
@@ -23,6 +24,7 @@ const PortfolioStockDetails = ({route, navigation}: Props) => {
   const {Symbol, Date, Quantity} = route?.params?.item;
 
   const [data, setData] = useState<StockInfo>();
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,89 +38,95 @@ const PortfolioStockDetails = ({route, navigation}: Props) => {
         const response = await axios.get(apiUrl);
 
         setData(response?.data?.StockInfo);
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
+        setLoading(false);
       }
     };
 
     fetchData();
+    setLoading(true);
   }, [Date, Quantity, Symbol]);
 
   return (
     <View style={styles.container}>
       <ScreenHeader navigation={navigation} title={'Details'} />
-      <View style={styles.topContainer}>
-        <View style={styles.stockDetailsContainer}>
-          <Image
-            source={data?.Stock.Logo ? {uri: data?.Stock.Logo} : Images.apple}
-            style={styles.stockIcon}
-            resizeMode="contain"
-          />
-          <View style={styles.stockLabelContainer}>
-            <Text style={styles.stockName}>{Symbol}</Text>
-            <Text style={styles.stockDate}>{formatedDate(Date)}</Text>
+      <View style={styles.loaderContainer}>
+        <View style={styles.topContainer}>
+          <View style={styles.stockDetailsContainer}>
+            <Image
+              source={data?.Stock.Logo ? {uri: data?.Stock.Logo} : Images.apple}
+              style={styles.stockIcon}
+              resizeMode="contain"
+            />
+            <View style={styles.stockLabelContainer}>
+              <Text style={styles.stockName}>{Symbol}</Text>
+              <Text style={styles.stockDate}>{formatedDate(Date)}</Text>
+            </View>
+          </View>
+          <View style={styles.stockPriceContainer}>
+            <Text style={styles.percentageChange}>Qty: {Quantity}</Text>
           </View>
         </View>
-        <View style={styles.stockPriceContainer}>
-          <Text style={styles.percentageChange}>Qty: {Quantity}</Text>
+        <View style={styles.targetDetailsContainer}>
+          <Text style={styles.currentPriceLabel}>
+            Current Price: ₹ {data?.Stock?.Values?.LTP || '--'}
+          </Text>
+          <LinearGradient
+            colors={['#F2FBFF', '#dceff7', '#EDF7FF']}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 0}}
+            style={styles.gradientContainer}>
+            <View style={styles.targetContainer}>
+              <Text style={styles.targetLabel}>Target Price 1</Text>
+              <Text style={styles.targetLabel}>
+                ₹ {data?.Stock?.Values?.Target1 || '--'}
+              </Text>
+            </View>
+            <View style={styles.targetContainer}>
+              <Text style={styles.stopLossLabel}>Stop Loss</Text>
+              <Text style={styles.stopLossLabel}>
+                ₹ {data?.Stock?.Values?.SL || '--'}
+              </Text>
+            </View>
+            <View style={styles.seperator} />
+            <View style={styles.targetContainer}>
+              <Text style={styles.targetLabel}>Target Price 2</Text>
+              <Text style={styles.targetLabel}>
+                ₹ {data?.Stock?.Values?.Target2 || '--'}
+              </Text>
+            </View>
+            <View style={styles.targetContainer}>
+              <Text style={styles.stopLossLabel}>Stop Loss</Text>
+              <Text style={styles.stopLossLabel}>
+                ₹ {data?.Stock?.Values?.SL || '--'}
+              </Text>
+            </View>
+            <View style={styles.seperator} />
+            <View style={styles.targetContainer}>
+              <Text style={styles.targetLabel}>Target Price 3</Text>
+              <Text style={styles.targetLabel}>
+                ₹ {data?.Stock?.Values?.Target3 || '--'}
+              </Text>
+            </View>
+            <View style={styles.targetContainer}>
+              <Text style={styles.stopLossLabel}>Stop Loss</Text>
+              <Text style={styles.stopLossLabel}>
+                ₹ {data?.Stock?.Values?.SL || '--'}
+              </Text>
+            </View>
+          </LinearGradient>
         </View>
-      </View>
-      <View style={styles.targetDetailsContainer}>
-        <Text style={styles.currentPriceLabel}>
-          Current Price: ₹ {data?.Stock?.Values?.LTP || '--'}
-        </Text>
-        <LinearGradient
-          colors={['#F2FBFF', '#dceff7', '#EDF7FF']}
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 0}}
-          style={styles.gradientContainer}>
-          <View style={styles.targetContainer}>
-            <Text style={styles.targetLabel}>Target Price 1</Text>
-            <Text style={styles.targetLabel}>
-              ₹ {data?.Stock?.Values?.Target1 || '--'}
-            </Text>
-          </View>
-          <View style={styles.targetContainer}>
-            <Text style={styles.stopLossLabel}>Stop Loss</Text>
-            <Text style={styles.stopLossLabel}>
-              ₹ {data?.Stock?.Values?.SL || '--'}
-            </Text>
-          </View>
-          <View style={styles.seperator} />
-          <View style={styles.targetContainer}>
-            <Text style={styles.targetLabel}>Target Price 2</Text>
-            <Text style={styles.targetLabel}>
-              ₹ {data?.Stock?.Values?.Target2 || '--'}
-            </Text>
-          </View>
-          <View style={styles.targetContainer}>
-            <Text style={styles.stopLossLabel}>Stop Loss</Text>
-            <Text style={styles.stopLossLabel}>
-              ₹ {data?.Stock?.Values?.SL || '--'}
-            </Text>
-          </View>
-          <View style={styles.seperator} />
-          <View style={styles.targetContainer}>
-            <Text style={styles.targetLabel}>Target Price 3</Text>
-            <Text style={styles.targetLabel}>
-              ₹ {data?.Stock?.Values?.Target3 || '--'}
-            </Text>
-          </View>
-          <View style={styles.targetContainer}>
-            <Text style={styles.stopLossLabel}>Stop Loss</Text>
-            <Text style={styles.stopLossLabel}>
-              ₹ {data?.Stock?.Values?.SL || '--'}
-            </Text>
-          </View>
-        </LinearGradient>
-      </View>
-      <View style={styles.profitDetailContainer}>
-        <Text style={styles.currentPriceLabel}>
-          Total Profit: ₹ {data?.TotalProfit?.Profit || '--'}
-        </Text>
-        <Text style={styles.currentPriceLabel}>
-          Trade Status: {data?.TotalProfit?.['Trade Status']}
-        </Text>
+        <View style={styles.profitDetailContainer}>
+          <Text style={styles.currentPriceLabel}>
+            Total Profit: ₹ {data?.TotalProfit?.Profit || '--'}
+          </Text>
+          <Text style={styles.currentPriceLabel}>
+            Trade Status: {data?.TotalProfit?.['Trade Status']}
+          </Text>
+        </View>
+        {loading && <Loader />}
       </View>
     </View>
   );
@@ -129,6 +137,9 @@ export default PortfolioStockDetails;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.white,
+    flex: 1,
+  },
+  loaderContainer: {
     flex: 1,
   },
   topContainer: {
