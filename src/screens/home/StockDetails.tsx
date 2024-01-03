@@ -13,7 +13,7 @@ import React, {useEffect, useState} from 'react';
 import ScreenHeader from '../../components/headers/ScreenHeader';
 import Colors from '../../utils/Colors';
 import Images from '../../utils/Images';
-import {formatedDate} from '../../utils/Helper';
+import {formatedDate, getData, setData} from '../../utils/Helper';
 import {
   responsiveHeight,
   responsiveWidth,
@@ -58,26 +58,6 @@ const StockDetails = ({route, navigation}: Props) => {
     };
   }, []);
 
-  const storeData = async (value: any) => {
-    try {
-      const jsonValue = JSON.stringify(value);
-      await AsyncStorage.setItem('portfolio-items', jsonValue);
-    } catch (e) {
-      // saving error
-      console.log('Error: ', e);
-    }
-  };
-
-  const getData = async () => {
-    try {
-      const jsonValue = await AsyncStorage.getItem('portfolio-items');
-      return jsonValue != null ? JSON.parse(jsonValue) : [];
-    } catch (e) {
-      // error reading value
-      console.log('Error: ', e);
-    }
-  };
-
   const onBuy = async () => {
     if (!quantity && !price) {
       setError('Price & Quantity are required!');
@@ -113,7 +93,7 @@ const StockDetails = ({route, navigation}: Props) => {
         Price: price,
         Logo: logo,
       });
-      await storeData(portfolioList);
+      await setData(portfolioList);
       setQuantity('');
       setPrice('');
       Alert.alert('Success', 'Added to portfolio succesfully.');
