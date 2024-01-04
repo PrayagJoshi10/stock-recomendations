@@ -17,7 +17,7 @@ interface Props {
 }
 
 const StockDetailCard = ({item, onPress}: Props) => {
-  const {Symbol, Date, High, PercentageChange, logo} = item;
+  const {Symbol, Date, High, PercentageChange, Logo} = item;
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -28,7 +28,7 @@ const StockDetailCard = ({item, onPress}: Props) => {
         <TouchableOpacity onPress={onPress} style={styles.buttonContainer}>
           <View style={styles.stockDetailsContainer}>
             <Image
-              source={{uri: logo}}
+              source={Logo ? {uri: Logo} : Images.apple}
               style={styles.stockIcon}
               resizeMode="contain"
             />
