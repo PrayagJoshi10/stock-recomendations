@@ -15,6 +15,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import Fonts from '../../utils/Fonts';
 import {responsiveWidth} from 'react-native-responsive-dimensions';
 import {ROUTES} from '../../navigation/Routes';
+import {setData} from '../../utils/Helper';
 
 interface Props {
   navigation: any;
@@ -31,7 +32,7 @@ const LoginSignup = ({navigation}: Props) => {
     return;
   };
 
-  const onLogin = () => {
+  const onLogin = async () => {
     if (!email && !password) {
       setError('Emai and Password are Required !');
       return;
@@ -45,7 +46,10 @@ const LoginSignup = ({navigation}: Props) => {
       return;
     }
     if (email === 'admin' && password === 'admin') {
-      navigation.replace(ROUTES.MAINSTACK.STACK);
+      try {
+        await setData('isLoggedIn', 'true');
+        navigation.replace(ROUTES.MAINSTACK.STACK);
+      } catch (err) {}
     } else {
       setError('Incorrect Email or Password !');
     }

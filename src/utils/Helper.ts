@@ -12,6 +12,16 @@ export const formatedDate = (date: string) => {
 
 export const getData = async (key: string) => {
   try {
+    const value = await AsyncStorage.getItem(key);
+    return value;
+  } catch (e) {
+    // error reading value
+    console.log('Error: ', e);
+  }
+};
+
+export const getJsonData = async (key: string) => {
+  try {
     const jsonValue = await AsyncStorage.getItem(key);
     return jsonValue != null ? JSON.parse(jsonValue) : [];
   } catch (e) {

@@ -17,7 +17,7 @@ import {
   calculateCurrentProfit,
   calculateTotalInvestment,
   formatedDate,
-  getData,
+  getJsonData,
   setData,
 } from '../../utils/Helper';
 import Colors from '../../utils/Colors';
@@ -73,7 +73,7 @@ const PortfolioStockDetails = ({route, navigation}: Props) => {
   }, [Date, Quantity, Symbol, quantityy]);
 
   const onEdit = async (price: string, quantity: string) => {
-    const portfolioList = await getData('portfolio-items');
+    const portfolioList = await getJsonData('portfolio-items');
 
     const newPortfolioList = portfolioList.map((item: any) => {
       if (item.Id === Id) {

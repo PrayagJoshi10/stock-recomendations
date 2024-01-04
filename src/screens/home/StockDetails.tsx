@@ -16,7 +16,7 @@ import Images from '../../utils/Images';
 import {
   calculateTotalInvestment,
   formatedDate,
-  getData,
+  getJsonData,
   setData,
 } from '../../utils/Helper';
 import {
@@ -86,7 +86,7 @@ const StockDetails = ({route, navigation}: Props) => {
     }
 
     try {
-      const portfolioList = await getData('portfolio-items');
+      const portfolioList = await getJsonData('portfolio-items');
       const existingItem = portfolioList.find(
         (item: PortfolioCardTypes) =>
           item.Symbol === Symbol && item.Date === BuyDate,

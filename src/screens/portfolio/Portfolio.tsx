@@ -15,11 +15,11 @@ const Portfolio = ({navigation}: Props) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      getData();
+      getJsonData();
     }, []),
   );
 
-  const getData = async () => {
+  const getJsonData = async () => {
     try {
       const jsonValue = await AsyncStorage.getItem('portfolio-items');
       setPortfolioData(jsonValue != null ? JSON.parse(jsonValue) : []);

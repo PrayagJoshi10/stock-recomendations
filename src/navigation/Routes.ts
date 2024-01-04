@@ -5,6 +5,7 @@ export const ROUTES = {
   },
   MAINSTACK: {
     STACK: 'Main Stack',
+    SPLASH: 'Splash',
   },
   HOMESTACK: {
     STACK: 'Home Stack',
