@@ -70,3 +70,20 @@ export const calculateCurrentProfit = (
   const currentInvestmentUpto2Decimal = currentInvestment.toFixed(2);
   return currentInvestmentUpto2Decimal;
 };
+
+export const calculateCurrentGains = (
+  buyPrice: string | number | undefined,
+  currentPrice: string | number | undefined,
+  quantity: string | number | undefined,
+) => {
+  if (!quantity || !buyPrice || !currentPrice) {
+    return '--';
+  }
+  const buyValue = Number(buyPrice) * Number(quantity);
+  const currentValue = Number(currentPrice) * Number(quantity);
+
+  // Calculate the percentage change
+  const percentageChange = ((currentValue - buyValue) / buyValue) * 100;
+  const percentageChangeUpto2Decimal = percentageChange.toFixed(2);
+  return percentageChangeUpto2Decimal;
+};

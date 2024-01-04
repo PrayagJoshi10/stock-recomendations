@@ -12,6 +12,7 @@ import axios from 'axios';
 import ScreenHeader from '../../components/headers/ScreenHeader';
 import Images from '../../utils/Images';
 import {
+  calculateCurrentGains,
   calculateCurrentInvestment,
   calculateCurrentProfit,
   calculateTotalInvestment,
@@ -140,11 +141,15 @@ const PortfolioStockDetails = ({route, navigation}: Props) => {
                 />
                 <TradeDetails
                   label={'Current P/L'}
-                  value={calculateCurrentProfit(
+                  value={`${calculateCurrentProfit(
                     pricee,
                     data?.Stock?.Values?.LTP,
                     quantityy,
-                  )}
+                  )}  (${calculateCurrentGains(
+                    pricee,
+                    data?.Stock?.Values?.LTP,
+                    quantityy,
+                  )}%)`}
                 />
               </View>
               <TouchableOpacity
