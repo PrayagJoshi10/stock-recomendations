@@ -10,7 +10,7 @@ const Stack = createNativeStackNavigator();
 const RootStack = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Navigator screenOptions={{headerShown: false, animation: 'fade'}}>
         <Stack.Screen name={ROUTES.AUTHSTACK.STACK} component={AuthStack} />
         <Stack.Screen name={ROUTES.MAINSTACK.STACK} component={MainStack} />
       </Stack.Navigator>

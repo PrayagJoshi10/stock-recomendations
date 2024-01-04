@@ -11,6 +11,7 @@ const Colors = {
   green_600: '#059669',
   red_600: '#DC2626',
   green_100: '#EFFFFC',
+  purple_700: '#9467C1',
 };
 
 export default Colors;
