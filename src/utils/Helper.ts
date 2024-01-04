@@ -29,3 +29,44 @@ export const setData = async (key: string, value: any) => {
     console.log('Error: ', e);
   }
 };
+
+export const calculateTotalInvestment = (
+  price: string | number,
+  quantity: string | number,
+) => {
+  if (!quantity || !price) {
+    return '--';
+  }
+  const investment = Number(quantity) * Number(price);
+
+  const investmentUpto2Decimal = investment.toFixed(2);
+  return investmentUpto2Decimal;
+};
+export const calculateCurrentInvestment = (
+  currentPrice: string | number | undefined,
+  quantity: string | number | undefined,
+) => {
+  if (!quantity || !currentPrice) {
+    return '--';
+  }
+  const currentInvestment = Number(currentPrice) * Number(quantity);
+
+  const currentInvestmentUpto2Decimal = currentInvestment.toFixed(2);
+  return currentInvestmentUpto2Decimal;
+};
+
+export const calculateCurrentProfit = (
+  buyPrice: string | number | undefined,
+  currentPrice: string | number | undefined,
+  quantity: string | number | undefined,
+) => {
+  if (!quantity || !buyPrice || !currentPrice) {
+    return '--';
+  }
+  const currentInvestment =
+    Number(currentPrice) * Number(quantity) -
+    Number(buyPrice) * Number(quantity);
+
+  const currentInvestmentUpto2Decimal = currentInvestment.toFixed(2);
+  return currentInvestmentUpto2Decimal;
+};

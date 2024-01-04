@@ -66,6 +66,20 @@ export interface StockInfo {
     'Remaining Shares': number;
     SL: number;
   };
+  TGT2: {
+    Date: string;
+    Note: string;
+    Profit: number;
+    'Remaining Shares': number;
+    SL: number;
+  };
+  TGT3: {
+    Date: string;
+    Note: string;
+    Profit: number;
+    'Remaining Shares': number;
+    SL: number;
+  };
   TotalProfit: {
     Profit: number;
     'Trade Status': string;

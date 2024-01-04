@@ -4,22 +4,37 @@ import Colors from '../../utils/Colors';
 import Fonts from '../../utils/Fonts';
 
 interface Props {
+  targetLabel: string;
   target: number | undefined;
   stopLoss: number | undefined;
   seperator?: boolean;
+  isAchieved: boolean | undefined;
 }
 
-const TargetCard = ({target, stopLoss, seperator = false}: Props) => {
+const TargetCard = ({
+  targetLabel,
+  target,
+  stopLoss,
+  seperator = false,
+  isAchieved,
+}: Props) => {
   return (
     <View style={styles.container}>
       <View style={styles.targetContainer}>
-        <Text style={styles.targetLabel}>Target Price 1</Text>
+        <Text style={styles.targetLabel}>{targetLabel}</Text>
+        {isAchieved && (
+          <View style={styles.achievedContainer}>
+            <Text style={styles.achievedLabel}>Achieved</Text>
+          </View>
+        )}
         <Text style={styles.targetLabel}>₹ {target || '--'}</Text>
       </View>
-      <View style={styles.targetContainer}>
-        <Text style={styles.stopLossLabel}>Stop Loss</Text>
-        <Text style={styles.stopLossLabel}>₹ {stopLoss || '--'}</Text>
-      </View>
+      {!isAchieved && (
+        <View style={styles.targetContainer}>
+          <Text style={styles.stopLossLabel}>Stop Loss</Text>
+          <Text style={styles.stopLossLabel}>₹ {stopLoss || '--'}</Text>
+        </View>
+      )}
       {seperator && <View style={styles.seperator} />}
     </View>
   );
@@ -50,5 +65,20 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 1,
     backgroundColor: Colors.gray_400,
+  },
+  achievedContainer: {
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    backgroundColor: Colors.green_100,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderColor: Colors.green_700,
+    // borderWidth: 0.5,
+  },
+  achievedLabel: {
+    color: Colors.green_700,
+    fontSize: 14,
+    fontFamily: Fonts.urbanist_600,
   },
 });

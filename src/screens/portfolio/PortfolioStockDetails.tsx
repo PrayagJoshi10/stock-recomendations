@@ -1,10 +1,24 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import moment from 'moment-timezone';
 import axios from 'axios';
 import ScreenHeader from '../../components/headers/ScreenHeader';
 import Images from '../../utils/Images';
-import {formatedDate, getData, setData} from '../../utils/Helper';
+import {
+  calculateCurrentInvestment,
+  calculateCurrentProfit,
+  calculateTotalInvestment,
+  formatedDate,
+  getData,
+  setData,
+} from '../../utils/Helper';
 import Colors from '../../utils/Colors';
 import {
   responsiveHeight,
@@ -17,6 +31,7 @@ import Loader from '../../components/loaders/Loader';
 import EditPortfolioStockModal from '../../components/modals/EditPortfolioStockModal';
 import TargetCard from '../../components/cards/TargetCard';
 import TradeDetails from '../../components/texts/TradeDetails';
+import StockPricesCard from '../../components/cards/StockPricesCard';
 
 interface Props {
   navigation: any;
@@ -30,7 +45,7 @@ const PortfolioStockDetails = ({route, navigation}: Props) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [quantityy, setQuantity] = useState<string>(Quantity);
-  const [pricee, setPrice] = useState<string>(Quantity);
+  const [pricee, setPrice] = useState<string>(Price);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -77,82 +92,117 @@ const PortfolioStockDetails = ({route, navigation}: Props) => {
     <View style={styles.container}>
       <ScreenHeader navigation={navigation} title={'Details'} />
       <View style={styles.loaderContainer}>
-        <View style={styles.topContainer}>
-          <View style={styles.stockDetailsContainer}>
-            <Image
-              source={data?.Stock.Logo ? {uri: data?.Stock.Logo} : Images.apple}
-              style={styles.stockIcon}
-              resizeMode="contain"
-            />
-            <View style={styles.stockLabelContainer}>
-              <Text style={styles.stockName}>{Symbol}</Text>
-              <Text style={styles.stockDate}>{formatedDate(Date)}</Text>
-            </View>
-          </View>
-          <View style={styles.stockPriceContainer}>
-            <Text style={styles.percentageChange}>Total Qty: {quantityy}</Text>
-          </View>
-        </View>
-        <View style={styles.targetDetailsContainer}>
-          <View style={styles.editContainer}>
-            <View style={styles.priceDetailsContainer}>
-              <TradeDetails label={'Buy Price'} value={pricee} />
-              <TradeDetails
-                label={'Current Price'}
-                value={data?.Stock?.Values?.LTP}
+        <ScrollView style={styles.scrollContainer}>
+          <View style={styles.topContainer}>
+            <View style={styles.stockDetailsContainer}>
+              <Image
+                source={
+                  data?.Stock.Logo ? {uri: data?.Stock.Logo} : Images.apple
+                }
+                style={styles.stockIcon}
+                resizeMode="contain"
               />
-              <TradeDetails
-                label={'Total Investment'}
-                value={Number(quantityy) * Number(pricee)}
-              />
-            </View>
-            <TouchableOpacity
-              style={styles.editButton}
-              onPress={() => setModalVisible(true)}>
-              <View style={styles.editButtonContainer}>
-                <Text style={styles.editButtonLabel}>Edit</Text>
+              <View style={styles.stockLabelContainer}>
+                <Text style={styles.stockName}>{Symbol}</Text>
+                <Text style={styles.stockDate}>{formatedDate(Date)}</Text>
               </View>
-            </TouchableOpacity>
+            </View>
+            <View style={styles.stockPriceContainer}>
+              <Text style={styles.percentageChange}>
+                Total Qty: {quantityy}
+              </Text>
+            </View>
           </View>
-          <LinearGradient
-            colors={['#F2FBFF', '#dceff7', '#EDF7FF']}
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 0}}
-            style={styles.gradientContainer}>
-            <TargetCard
-              target={data?.Stock?.Values?.Target1}
-              stopLoss={data?.Stock?.Values?.SL}
-              seperator={true}
-            />
-            <TargetCard
-              target={data?.Stock?.Values?.Target2}
-              stopLoss={data?.Stock?.Values?.SL}
-              seperator={true}
-            />
-            <TargetCard
-              target={data?.Stock?.Values?.Target3}
-              stopLoss={data?.Stock?.Values?.SL}
-            />
-          </LinearGradient>
-        </View>
-        <View style={styles.profitDetailContainer}>
-          <TradeDetails
-            label={'Total Profit'}
-            value={data?.TotalProfit?.Profit}
+          <StockPricesCard
+            Open={data?.Stock?.Values?.Open}
+            Close={data?.Stock?.Values?.Close}
+            High={data?.Stock?.Values?.High}
+            Low={data?.Stock?.Values?.Low}
           />
-          <TradeDetails
-            label={'Trade Status'}
-            value={data?.Entry?.['Trade Status']}
-            isAmount={false}
+          <View style={styles.targetDetailsContainer}>
+            <View style={styles.editContainer}>
+              <View style={styles.priceDetailsContainer}>
+                <TradeDetails label={'Buy Price'} value={pricee} />
+                <TradeDetails
+                  label={'Current Price'}
+                  value={data?.Stock?.Values?.LTP}
+                />
+                <TradeDetails
+                  label={'Total Investment'}
+                  value={calculateTotalInvestment(pricee, quantityy)}
+                />
+                <TradeDetails
+                  label={'Current Investment'}
+                  value={calculateCurrentInvestment(
+                    data?.Stock?.Values?.LTP,
+                    quantityy,
+                  )}
+                />
+                <TradeDetails
+                  label={'Current P/L'}
+                  value={calculateCurrentProfit(
+                    pricee,
+                    data?.Stock?.Values?.LTP,
+                    quantityy,
+                  )}
+                />
+              </View>
+              <TouchableOpacity
+                style={styles.editButton}
+                onPress={() => setModalVisible(true)}>
+                <View style={styles.editButtonContainer}>
+                  <Text style={styles.editButtonLabel}>Edit</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+            <LinearGradient
+              colors={['#F2FBFF', '#dceff7', '#EDF7FF']}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 0}}
+              style={styles.gradientContainer}>
+              <TargetCard
+                targetLabel="Target Price 1"
+                target={data?.Stock?.Values?.Target1}
+                stopLoss={data?.Stock?.Values?.SL}
+                seperator={true}
+                isAchieved={data?.TGT1 ? true : false}
+              />
+              <TargetCard
+                targetLabel="Target Price 2"
+                target={data?.Stock?.Values?.Target2}
+                stopLoss={data?.Stock?.Values?.SL}
+                seperator={true}
+                isAchieved={data?.TGT2 ? true : false}
+              />
+              <TargetCard
+                targetLabel="Target Price 3"
+                target={data?.Stock?.Values?.Target3}
+                stopLoss={data?.Stock?.Values?.SL}
+                isAchieved={data?.TGT3 ? true : false}
+              />
+            </LinearGradient>
+          </View>
+          <View style={styles.profitDetailContainer}>
+            <TradeDetails
+              label={'Total Profit'}
+              value={data?.TotalProfit?.Profit}
+            />
+            <TradeDetails
+              label={'Trade Status'}
+              value={data?.Entry?.['Trade Status']}
+              isAmount={false}
+            />
+          </View>
+          {loading && <Loader />}
+          <EditPortfolioStockModal
+            modalVisible={modalVisible}
+            setModalVisible={setModalVisible}
+            onPress={(price: string, quantity: string) => {
+              onEdit(price, quantity);
+            }}
           />
-        </View>
-        {loading && <Loader />}
-        <EditPortfolioStockModal
-          modalVisible={modalVisible}
-          onPress={(price: string, quantity: string) => {
-            onEdit(price, quantity);
-          }}
-        />
+          <View style={styles.footer} />
+        </ScrollView>
       </View>
     </View>
   );
@@ -167,6 +217,9 @@ const styles = StyleSheet.create({
   },
   loaderContainer: {
     flex: 1,
+  },
+  scrollContainer: {
+    flexGrow: 1,
   },
   topContainer: {
     flexDirection: 'row',
@@ -243,5 +296,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: responsiveWidth(5.3),
     marginTop: 20,
     gap: 10,
+  },
+  footer: {
+    height: 40,
   },
 });

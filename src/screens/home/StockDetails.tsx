@@ -13,13 +13,19 @@ import React, {useEffect, useState} from 'react';
 import ScreenHeader from '../../components/headers/ScreenHeader';
 import Colors from '../../utils/Colors';
 import Images from '../../utils/Images';
-import {formatedDate, getData, setData} from '../../utils/Helper';
+import {
+  calculateTotalInvestment,
+  formatedDate,
+  getData,
+  setData,
+} from '../../utils/Helper';
 import {
   responsiveHeight,
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
 import Fonts from '../../utils/Fonts';
 import {PortfolioCardTypes} from '../../utils/Types';
+import StockPricesCard from '../../components/cards/StockPricesCard';
 
 interface Props {
   navigation: any;
@@ -112,7 +118,7 @@ const StockDetails = ({route, navigation}: Props) => {
 
   const handleTextChange = (text: string, setText: (text: string) => void) => {
     setError('');
-    const numericInput = text.replace(/[^0-9]/g, '');
+    const numericInput = text.replace(/[^0-9.]/g, '');
     setText(numericInput);
     return;
   };
@@ -144,28 +150,7 @@ const StockDetails = ({route, navigation}: Props) => {
         <View style={styles.currentPriceContainer}>
           <Text style={styles.curentPrice}>Current Price : ₹ {Close}</Text>
         </View>
-        <View style={styles.openCloseContainer}>
-          <View style={styles.pricesContainer}>
-            <View style={styles.priceLabelContainer}>
-              <Text style={styles.priceLabel}>Open: </Text>
-              <Text style={styles.openPrice}>₹ {Open}</Text>
-            </View>
-            <View style={styles.priceLabelContainer}>
-              <Text style={styles.priceLabel}>Close: </Text>
-              <Text style={styles.closePrice}>₹ {Close}</Text>
-            </View>
-          </View>
-          <View style={styles.pricesContainer}>
-            <View style={styles.priceLabelContainer}>
-              <Text style={styles.priceLabel}>High: </Text>
-              <Text style={styles.highPrice}>₹ {High}</Text>
-            </View>
-            <View style={styles.priceLabelContainer}>
-              <Text style={styles.priceLabel}>Low: </Text>
-              <Text style={styles.lowPrice}>₹ {Low}</Text>
-            </View>
-          </View>
-        </View>
+        <StockPricesCard Open={Open} Close={Close} High={High} Low={Low} />
       </View>
       <View style={styles.inputContainer}>
         <TextInput
@@ -197,7 +182,7 @@ const StockDetails = ({route, navigation}: Props) => {
         </View>
         <View style={styles.currentPriceContainer}>
           <Text style={styles.curentPrice}>
-            Total Investment: {Number(quantity) * Number(price)}
+            Total Investment: {calculateTotalInvestment(price, quantity)}
           </Text>
         </View>
         <Text style={styles.error}>{error}</Text>
@@ -271,61 +256,6 @@ const styles = StyleSheet.create({
   curentPrice: {
     color: Colors.gray_700,
     fontSize: 16,
-    fontFamily: Fonts.urbanist_700,
-  },
-  openCloseContainer: {
-    // borderColor: Colors.blue,
-    // borderWidth: 0.5,
-    padding: 25,
-    marginTop: 25,
-    marginHorizontal: responsiveWidth(5.3),
-    borderRadius: 8,
-    backgroundColor: Colors.white,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    shadowOffset: {
-      height: 0,
-      width: 0,
-    },
-    shadowColor: '#00A9F1',
-    elevation: 1,
-    shadowOpacity: 0.7,
-    shadowRadius: 1,
-  },
-  pricesContainer: {
-    gap: 30,
-  },
-  priceLabelContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: 100,
-  },
-  priceLabel: {
-    color: Colors.gray_400,
-    fontSize: 12,
-    fontFamily: Fonts.urbanist_500,
-    marginRight: 5,
-  },
-  openPrice: {
-    color: Colors.gray_700,
-    fontSize: 14,
-    fontFamily: Fonts.urbanist_700,
-  },
-  closePrice: {
-    color: Colors.blue_600,
-    fontSize: 14,
-    fontFamily: Fonts.urbanist_700,
-  },
-  highPrice: {
-    color: Colors.green_600,
-    fontSize: 14,
-    fontFamily: Fonts.urbanist_700,
-  },
-  lowPrice: {
-    color: Colors.red_600,
-    fontSize: 14,
     fontFamily: Fonts.urbanist_700,
   },
   inputContainer: {

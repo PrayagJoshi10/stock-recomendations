@@ -1,4 +1,5 @@
 import {
+  Image,
   Modal,
   StyleSheet,
   Text,
@@ -13,19 +14,25 @@ import {
 } from 'react-native-responsive-dimensions';
 import Colors from '../../utils/Colors';
 import Fonts from '../../utils/Fonts';
+import Images from '../../utils/Images';
 
 interface Props {
   modalVisible: boolean;
+  setModalVisible: (value: boolean) => void;
   onPress: (price: string, quantity: string) => void;
 }
 
-const EditPortfolioStockModal = ({modalVisible, onPress}: Props) => {
+const EditPortfolioStockModal = ({
+  modalVisible,
+  setModalVisible,
+  onPress,
+}: Props) => {
   const [quantity, setQuantity] = useState('');
   const [price, setPrice] = useState('');
   const [error, setError] = useState('');
   const handleTextChange = (text: string, setText: (text: string) => void) => {
     setError('');
-    const numericInput = text.replace(/[^0-9]/g, '');
+    const numericInput = text.replace(/[^0-9.]/g, '');
     setText(numericInput);
     return;
   };
@@ -38,10 +45,25 @@ const EditPortfolioStockModal = ({modalVisible, onPress}: Props) => {
     setPrice('');
     setQuantity('');
   };
+  const onClose = () => {
+    setError('');
+    setPrice('');
+    setQuantity('');
+    setModalVisible(false);
+  };
   return (
     <Modal animationType="slide" transparent={true} visible={modalVisible}>
       <View style={styles.container}>
         <View style={styles.centerContainer}>
+          <View style={styles.crossContainer}>
+            <TouchableOpacity style={styles.crossButton} onPress={onClose}>
+              <Image
+                source={Images.cross}
+                style={styles.cross}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
+          </View>
           <Text style={styles.title}>Edit stock details.</Text>
           <View style={styles.contentContainer}>
             <TextInput
@@ -116,7 +138,7 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.urbanist_600,
   },
   buttonContainer: {
-    marginTop: 50,
+    marginTop: 30,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: Colors.white,
@@ -142,5 +164,18 @@ const styles = StyleSheet.create({
     color: Colors.white,
     fontSize: 14,
     fontFamily: Fonts.urbanist_600,
+  },
+  crossContainer: {
+    width: '100%',
+    alignItems: 'flex-end',
+  },
+  crossButton: {
+    padding: 5,
+  },
+  cross: {
+    height: responsiveHeight(2),
+    minHeight: 16,
+    width: responsiveHeight(2),
+    minWidth: 16,
   },
 });
