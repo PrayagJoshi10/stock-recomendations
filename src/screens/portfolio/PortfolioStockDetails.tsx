@@ -15,6 +15,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import {StockInfo} from '../../utils/Types';
 import Loader from '../../components/loaders/Loader';
 import EditPortfolioStockModal from '../../components/modals/EditPortfolioStockModal';
+import TargetCard from '../../components/cards/TargetCard';
+import TradeDetails from '../../components/texts/TradeDetails';
 
 interface Props {
   navigation: any;
@@ -94,15 +96,15 @@ const PortfolioStockDetails = ({route, navigation}: Props) => {
         <View style={styles.targetDetailsContainer}>
           <View style={styles.editContainer}>
             <View style={styles.priceDetailsContainer}>
-              <Text style={styles.currentPriceLabel}>
-                Buy Price: ₹ {pricee || '--'}
-              </Text>
-              <Text style={styles.currentPriceLabel}>
-                Current Price: ₹ {data?.Stock?.Values?.LTP || '--'}
-              </Text>
-              <Text style={styles.currentPriceLabel}>
-                Total Investment: ₹ {Number(quantityy) * Number(pricee) || '--'}
-              </Text>
+              <TradeDetails label={'Buy Price'} value={pricee} />
+              <TradeDetails
+                label={'Current Price'}
+                value={data?.Stock?.Values?.LTP}
+              />
+              <TradeDetails
+                label={'Total Investment'}
+                value={Number(quantityy) * Number(pricee)}
+              />
             </View>
             <TouchableOpacity
               style={styles.editButton}
@@ -117,53 +119,32 @@ const PortfolioStockDetails = ({route, navigation}: Props) => {
             start={{x: 0, y: 0}}
             end={{x: 1, y: 0}}
             style={styles.gradientContainer}>
-            <View style={styles.targetContainer}>
-              <Text style={styles.targetLabel}>Target Price 1</Text>
-              <Text style={styles.targetLabel}>
-                ₹ {data?.Stock?.Values?.Target1 || '--'}
-              </Text>
-            </View>
-            <View style={styles.targetContainer}>
-              <Text style={styles.stopLossLabel}>Stop Loss</Text>
-              <Text style={styles.stopLossLabel}>
-                ₹ {data?.Stock?.Values?.SL || '--'}
-              </Text>
-            </View>
-            <View style={styles.seperator} />
-            <View style={styles.targetContainer}>
-              <Text style={styles.targetLabel}>Target Price 2</Text>
-              <Text style={styles.targetLabel}>
-                ₹ {data?.Stock?.Values?.Target2 || '--'}
-              </Text>
-            </View>
-            <View style={styles.targetContainer}>
-              <Text style={styles.stopLossLabel}>Stop Loss</Text>
-              <Text style={styles.stopLossLabel}>
-                ₹ {data?.Stock?.Values?.SL || '--'}
-              </Text>
-            </View>
-            <View style={styles.seperator} />
-            <View style={styles.targetContainer}>
-              <Text style={styles.targetLabel}>Target Price 3</Text>
-              <Text style={styles.targetLabel}>
-                ₹ {data?.Stock?.Values?.Target3 || '--'}
-              </Text>
-            </View>
-            <View style={styles.targetContainer}>
-              <Text style={styles.stopLossLabel}>Stop Loss</Text>
-              <Text style={styles.stopLossLabel}>
-                ₹ {data?.Stock?.Values?.SL || '--'}
-              </Text>
-            </View>
+            <TargetCard
+              target={data?.Stock?.Values?.Target1}
+              stopLoss={data?.Stock?.Values?.SL}
+              seperator={true}
+            />
+            <TargetCard
+              target={data?.Stock?.Values?.Target2}
+              stopLoss={data?.Stock?.Values?.SL}
+              seperator={true}
+            />
+            <TargetCard
+              target={data?.Stock?.Values?.Target3}
+              stopLoss={data?.Stock?.Values?.SL}
+            />
           </LinearGradient>
         </View>
         <View style={styles.profitDetailContainer}>
-          <Text style={styles.currentPriceLabel}>
-            Total Profit: ₹ {data?.TotalProfit?.Profit || '--'}
-          </Text>
-          <Text style={styles.currentPriceLabel}>
-            Trade Status: {data?.Entry?.['Trade Status']}
-          </Text>
+          <TradeDetails
+            label={'Total Profit'}
+            value={data?.TotalProfit?.Profit}
+          />
+          <TradeDetails
+            label={'Trade Status'}
+            value={data?.Entry?.['Trade Status']}
+            isAmount={false}
+          />
         </View>
         {loading && <Loader />}
         <EditPortfolioStockModal
@@ -252,39 +233,15 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: Fonts.urbanist_600,
   },
-  currentPriceLabel: {
-    color: Colors.gray_700,
-    fontSize: 16,
-    fontFamily: Fonts.urbanist_600,
-  },
   gradientContainer: {
     padding: 20,
     borderRadius: 16,
     backgroundColor: Colors.blue,
     gap: 20,
   },
-  targetContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  targetLabel: {
-    color: Colors.gray_700,
-    fontSize: 16,
-    fontFamily: Fonts.urbanist_600,
-  },
-  stopLossLabel: {
-    color: Colors.red_600,
-    fontSize: 16,
-    fontFamily: Fonts.urbanist_600,
-  },
-  seperator: {
-    width: '100%',
-    height: 1,
-    backgroundColor: Colors.gray_400,
-  },
   profitDetailContainer: {
     paddingHorizontal: responsiveWidth(5.3),
     marginTop: 20,
+    gap: 10,
   },
 });
