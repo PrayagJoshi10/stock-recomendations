@@ -8,7 +8,7 @@ export interface StockListResponse {
   RSI: number;
   Prev_RSI: number;
   PercentageChange: number;
-  Logo: string;
+  logo: string;
 }
 
 export interface PortfolioCardTypes {

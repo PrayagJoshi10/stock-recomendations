@@ -38,10 +38,10 @@ const StockDetails = ({route, navigation}: Props) => {
     logo,
   } = route?.params?.item;
 
-  const [quantity, setQuantity] = useState('');
-  const [price, setPrice] = useState('');
-  const [error, setError] = useState('');
-  const [isKeyboardOpen, setKeyboardOpen] = useState(false);
+  const [quantity, setQuantity] = useState<string>('');
+  const [price, setPrice] = useState<string>('');
+  const [error, setError] = useState<string>('');
+  const [isKeyboardOpen, setKeyboardOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -195,7 +195,11 @@ const StockDetails = ({route, navigation}: Props) => {
             </View>
           </TouchableOpacity>
         </View>
-
+        <View style={styles.currentPriceContainer}>
+          <Text style={styles.curentPrice}>
+            Total Investment: {Number(quantity) * Number(price)}
+          </Text>
+        </View>
         <Text style={styles.error}>{error}</Text>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={onBuy}>
@@ -339,7 +343,6 @@ const styles = StyleSheet.create({
     borderColor: Colors.gray_400,
     borderBottomWidth: 0.5,
     color: Colors.gray_700,
-    marginTop: 20,
   },
   priceInputContainer: {
     flexDirection: 'row',

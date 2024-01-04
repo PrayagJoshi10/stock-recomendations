@@ -28,6 +28,7 @@ const PortfolioStockDetails = ({route, navigation}: Props) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [quantityy, setQuantity] = useState<string>(Quantity);
+  const [pricee, setPrice] = useState<string>(Quantity);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -66,6 +67,7 @@ const PortfolioStockDetails = ({route, navigation}: Props) => {
     });
     await setData('portfolio-items', newPortfolioList);
     quantity && setQuantity(quantity);
+    price && setPrice(price);
     setModalVisible(false);
   };
 
@@ -86,14 +88,22 @@ const PortfolioStockDetails = ({route, navigation}: Props) => {
             </View>
           </View>
           <View style={styles.stockPriceContainer}>
-            <Text style={styles.percentageChange}>Qty: {quantityy}</Text>
+            <Text style={styles.percentageChange}>Total Qty: {quantityy}</Text>
           </View>
         </View>
         <View style={styles.targetDetailsContainer}>
           <View style={styles.editContainer}>
-            <Text style={styles.currentPriceLabel}>
-              Current Price: ₹ {data?.Stock?.Values?.LTP || '--'}
-            </Text>
+            <View style={styles.priceDetailsContainer}>
+              <Text style={styles.currentPriceLabel}>
+                Buy Price: ₹ {pricee || '--'}
+              </Text>
+              <Text style={styles.currentPriceLabel}>
+                Current Price: ₹ {data?.Stock?.Values?.LTP || '--'}
+              </Text>
+              <Text style={styles.currentPriceLabel}>
+                Total Investment: ₹ {Number(quantityy) * Number(pricee) || '--'}
+              </Text>
+            </View>
             <TouchableOpacity
               style={styles.editButton}
               onPress={() => setModalVisible(true)}>
@@ -216,6 +226,9 @@ const styles = StyleSheet.create({
   targetDetailsContainer: {
     paddingHorizontal: responsiveWidth(5.3),
     marginTop: 40,
+  },
+  priceDetailsContainer: {
+    gap: 5,
   },
   editContainer: {
     flexDirection: 'row',
