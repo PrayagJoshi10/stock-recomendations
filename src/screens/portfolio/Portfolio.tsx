@@ -34,7 +34,7 @@ const Portfolio = ({navigation}: Props) => {
   return (
     <View style={styles.container}>
       <ScreenHeader title="Portfolio" navigation={navigation} />
-      <PortfolioList data={portfolioData} navigation={navigation} />
+      <PortfolioList data={portfolioData.reverse()} navigation={navigation} />
     </View>
   );
 };
