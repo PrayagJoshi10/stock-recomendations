@@ -11,6 +11,7 @@ interface props {
 }
 const Home = ({navigation}: props) => {
   const [data, setData] = useState<StockListResponse[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,8 +23,10 @@ const Home = ({navigation}: props) => {
         );
 
         setData(response?.data);
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
+        setLoading(false);
       }
     };
 
@@ -37,7 +40,7 @@ const Home = ({navigation}: props) => {
         }}
       />
       <WelcomeCard onPress={() => console.log('Invest Today')} />
-      <StockList data={data} navigation={navigation} />
+      <StockList data={data} navigation={navigation} loading={loading} />
     </View>
   );
 };

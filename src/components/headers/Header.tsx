@@ -1,4 +1,4 @@
-import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import Images from '../../utils/Images';
 import {
@@ -6,6 +6,7 @@ import {
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
 import Colors from '../../utils/Colors';
+import Fonts from '../../utils/Fonts';
 
 interface Props {
   onPress: () => void;
@@ -14,7 +15,8 @@ interface Props {
 const Header = ({onPress}: Props) => {
   return (
     <View style={styles.container}>
-      <Image source={Images.logo} style={styles.logo} resizeMode="contain" />
+      {/* <Image source={Images.logo} style={styles.logo} resizeMode="contain" /> */}
+      <Text style={styles.logo}>S t o c k</Text>
       <TouchableOpacity style={styles.button} onPress={onPress}>
         <Image
           source={Images.notification}
@@ -40,9 +42,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: responsiveWidth(5.3),
   },
   logo: {
-    height: responsiveHeight(2.4),
-    width: responsiveWidth(29),
-    minHeight: 20,
+    color: Colors.gray_700,
+    fontSize: 24,
+    fontFamily: Fonts.urbanist_700,
   },
   button: {
     padding: 10,

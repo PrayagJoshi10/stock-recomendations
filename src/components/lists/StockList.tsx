@@ -7,13 +7,15 @@ import StockDetailCard from '../cards/StockDetailCard';
 import {StockListResponse} from '../../utils/Types';
 import {ROUTES} from '../../navigation/Routes';
 import {NavigationProp, ParamListBase} from '@react-navigation/native';
+import Loader from '../loaders/Loader';
 
 interface Props {
   data: StockListResponse[];
   navigation: NavigationProp<ParamListBase>;
+  loading: boolean;
 }
 
-const StockList = ({data, navigation}: Props) => {
+const StockList = ({data, navigation, loading}: Props) => {
   return (
     <View style={styles.container}>
       <FlatList
@@ -38,6 +40,7 @@ const StockList = ({data, navigation}: Props) => {
           </View>
         }
       />
+      {loading && <Loader />}
     </View>
   );
 };
