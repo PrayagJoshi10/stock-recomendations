@@ -12,10 +12,6 @@ interface splashProps {
 }
 const Splash = ({navigation}: splashProps) => {
   const [isProccessing, setisProccessing] = useState<boolean>(true);
-  const fromTopToBottom = {opacity: 0, translateY: -100};
-  const animateTopToBotton = {opacity: 1, translateY: 0};
-  const fromBottomToTop = {opacity: 0, translateY: 100};
-  const animateBottomToTop = {opacity: 1, translateY: 0};
 
   useEffect(() => {
     const checkIsLoggedIn = async () => {
@@ -32,46 +28,65 @@ const Splash = ({navigation}: splashProps) => {
 
     setTimeout(() => {
       setisProccessing(false);
-    }, 1000);
+    }, 1600);
 
     checkIsLoggedIn();
   }, [isProccessing, navigation]);
-  useEffect(() => {}, []);
 
   return (
     <View style={styles.container}>
       <MotiText
         style={styles.splashTest}
-        from={fromTopToBottom}
-        animate={animateTopToBotton}
+        from={{opacity: 0, scale: 1, translateY: 152}}
+        animate={{
+          opacity: 1,
+          scale: [1.5, 1],
+          translateY: [0, 152],
+          translateX: [0, -73],
+        }}
         transition={{type: 'timing', duration: 700}}>
         S
       </MotiText>
       <MotiText
         style={styles.splashTest}
-        from={fromBottomToTop}
-        animate={animateBottomToTop}
+        from={{opacity: 0, scale: 1, translateY: 77}}
+        animate={{
+          opacity: 1,
+          scale: [1.5, 1],
+          translateY: [0, 77],
+          translateX: [0, -37],
+        }}
         transition={{type: 'timing', duration: 700}}>
         t
       </MotiText>
       <MotiText
         style={styles.splashTest}
-        from={fromTopToBottom}
-        animate={animateTopToBotton}
+        from={{opacity: 0, scale: 1}}
+        animate={{opacity: 1, scale: [1.5, 1]}}
         transition={{type: 'timing', duration: 700}}>
         o
       </MotiText>
       <MotiText
         style={styles.splashTest}
-        from={fromBottomToTop}
-        animate={animateBottomToTop}
+        from={{opacity: 0, scale: 1, translateY: -76}}
+        animate={{
+          opacity: 1,
+          scale: [1.5, 1],
+          translateY: [0, -76],
+          translateX: [0, 41],
+        }}
         transition={{type: 'timing', duration: 700}}>
         c
       </MotiText>
       <MotiText
         style={styles.splashTest}
-        from={fromTopToBottom}
-        animate={animateTopToBotton}
+        from={{opacity: 0, scale: 1, translateY: -151}}
+        animate={{
+          opacity: 1,
+          scale: [1.5, 1],
+          translateY: [0, -151],
+          translateX: [0, 71],
+        }}
         transition={{type: 'timing', duration: 700}}>
         k
       </MotiText>
@@ -87,7 +102,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     justifyContent: 'center',
     alignItems: 'center',
-    flexDirection: 'row',
+    // flexDirection: 'row',
     gap: 15,
   },
   splashTest: {
