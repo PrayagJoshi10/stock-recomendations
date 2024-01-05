@@ -1,3 +1,6 @@
+import 'react-native-reanimated';
+import 'react-native-gesture-handler';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {SafeAreaView, StatusBar, StyleSheet} from 'react-native';
 import React from 'react';
 import RootStack from './src/navigation/RootStack';
@@ -7,7 +10,9 @@ const App = (): JSX.Element => {
   return (
     <SafeAreaView style={styles.safeAreaContainer}>
       <StatusBar backgroundColor={Colors.blue} />
-      <RootStack />
+      <GestureHandlerRootView style={styles.safeAreaContainer}>
+        <RootStack />
+      </GestureHandlerRootView>
     </SafeAreaView>
   );
 };

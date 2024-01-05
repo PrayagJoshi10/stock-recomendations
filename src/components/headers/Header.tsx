@@ -7,6 +7,7 @@ import {
 } from 'react-native-responsive-dimensions';
 import Colors from '../../utils/Colors';
 import Fonts from '../../utils/Fonts';
+import {MotiView} from 'moti';
 
 interface Props {
   onPress: () => void;
@@ -16,7 +17,15 @@ const Header = ({onPress}: Props) => {
   return (
     <View style={styles.container}>
       {/* <Image source={Images.logo} style={styles.logo} resizeMode="contain" /> */}
-      <Text style={styles.logo}>S t o c k</Text>
+      <MotiView
+        from={{opacity: 0, scale: 0}}
+        animate={{opacity: 1, scale: 1}}
+        transition={{
+          type: 'timing',
+          duration: 350,
+        }}>
+        <Text style={styles.logo}>S t o c k</Text>
+      </MotiView>
       <TouchableOpacity style={styles.button} onPress={onPress}>
         <Image
           source={Images.notification}
