@@ -53,6 +53,7 @@ export interface StockInfo {
     'Remaining Shares': number;
     SL: number;
   };
+  Info: string;
   Stock: {
     Industry: string;
     Logo: string;
