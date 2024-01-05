@@ -9,22 +9,46 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Colors from '../../utils/Colors';
 import LinearGradient from 'react-native-linear-gradient';
 import Fonts from '../../utils/Fonts';
 import {responsiveWidth} from 'react-native-responsive-dimensions';
 import {ROUTES} from '../../navigation/Routes';
 import {setData} from '../../utils/Helper';
+import {
+  AnimatePresence,
+  MotiText,
+  MotiView,
+  useAnimationState,
+  useDynamicAnimation,
+} from 'moti';
 
 interface Props {
   navigation: any;
+}
+interface AnimatedTextProps {
+  label1: string;
+  label2: string;
+  isVisible: boolean;
+}
+
+interface AnimatedInputProps {
+  onChangeText: (text: string) => void;
+  placeholder: string;
+  secureTextEntry?: boolean;
+  value: string;
+  isVisible?: boolean;
+  transition?: any;
+  exitTransition?: any;
 }
 
 const LoginSignup = ({navigation}: Props) => {
   const [error, setError] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [name, setName] = useState<string>('');
+  const [isLogIn, setIsLogIn] = useState<boolean>(true);
 
   const handleTextChange = (text: string, setText: (text: string) => void) => {
     setError('');
@@ -54,6 +78,9 @@ const LoginSignup = ({navigation}: Props) => {
       setError('Incorrect Email or Password !');
     }
   };
+  // useEffect(() => {
+  //   titleAnimationState.transitionTo('show');
+  // }, [titleAnimationState]);
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -64,28 +91,62 @@ const LoginSignup = ({navigation}: Props) => {
         <LinearGradient
           colors={['#EC9FE9', '#DC96ED', '#AFA9F4', '#6EBDDF', '#FFFFFF']}
           style={styles.gradierntContainer}>
-          <View style={styles.loginContainer}>
-            <Text style={styles.title}>Login</Text>
-            <TextInput
-              style={[styles.input, styles.shadow]}
-              placeholder="Email"
-              placeholderTextColor={Colors.gray_400}
-              onChangeText={text => {
-                handleTextChange(text, setEmail);
-              }}
-              keyboardType="email-address"
-              value={email}
-            />
-            <TextInput
-              style={[styles.input, styles.shadow]}
-              placeholder="Password"
-              placeholderTextColor={Colors.gray_400}
-              onChangeText={text => {
-                handleTextChange(text, setPassword);
-              }}
-              secureTextEntry={true}
-              value={password}
-            />
+          <View key={'loginContainer'} style={styles.loginContainer}>
+            <AnimatedText label1="Login" label2="SignUp" isVisible={isLogIn} />
+
+            <MotiView
+              style={styles.inputContainer}
+              from={{opacity: 0, translateY: -50}}
+              animate={{opacity: 1, translateY: 0}}
+              transition={{type: 'timing', delay: 100}}>
+              <TextInput
+                style={[styles.input, styles.shadow]}
+                placeholder="Email"
+                placeholderTextColor={Colors.gray_400}
+                onChangeText={text => {
+                  handleTextChange(text, setEmail);
+                }}
+                // secureTextEntry={true}
+                value={email}
+              />
+            </MotiView>
+            <MotiView
+              style={styles.inputContainer}
+              from={{opacity: 0, translateY: -50}}
+              animate={{opacity: 1, translateY: 0}}
+              transition={{type: 'timing', delay: 200}}>
+              <TextInput
+                style={[styles.input, styles.shadow]}
+                placeholder="Password"
+                placeholderTextColor={Colors.gray_400}
+                onChangeText={text => {
+                  handleTextChange(text, setPassword);
+                }}
+                secureTextEntry={true}
+                value={password}
+              />
+            </MotiView>
+            <AnimatePresence>
+              {!isLogIn && (
+                <MotiView
+                  style={styles.inputContainer}
+                  from={{opacity: 0, translateY: -50}}
+                  animate={{opacity: 1, translateY: 0}}
+                  exit={{opacity: 0}}
+                  transition={{type: 'timing', delay: 300}}>
+                  <TextInput
+                    style={[styles.input, styles.shadow]}
+                    placeholder="Name"
+                    placeholderTextColor={Colors.gray_400}
+                    onChangeText={text => {
+                      handleTextChange(text, setName);
+                    }}
+                    value={name}
+                  />
+                </MotiView>
+              )}
+            </AnimatePresence>
+
             <Text style={styles.error}>{error}</Text>
             <TouchableOpacity
               style={[styles.loginButtonContainer, styles.shadow]}
@@ -93,10 +154,17 @@ const LoginSignup = ({navigation}: Props) => {
               <Text style={styles.loginButtonLabel}>Login</Text>
             </TouchableOpacity>
           </View>
-          <TouchableOpacity style={styles.bottomContainer}>
-            <Text style={styles.bottomText}>
+          <TouchableOpacity
+            key={'bottomContainer'}
+            style={styles.bottomContainer}
+            onPress={() => {
+              // setIsLogIn(!isLogIn);
+            }}>
+            <Text key={'bottomText'} style={styles.bottomText}>
               Dont have an account?{' '}
-              <Text style={{color: Colors.blue}}>Sign UP!</Text>
+              <Text key={'signUpLabel'} style={{color: Colors.blue}}>
+                Sign UP!
+              </Text>
             </Text>
           </TouchableOpacity>
         </LinearGradient>
@@ -106,6 +174,65 @@ const LoginSignup = ({navigation}: Props) => {
 };
 
 export default LoginSignup;
+
+const AnimatedText = ({label1, label2, isVisible}: AnimatedTextProps) => {
+  return (
+    <AnimatePresence exitBeforeEnter>
+      {isVisible ? (
+        <MotiText
+          key={'label1'}
+          style={styles.title}
+          from={{opacity: 0}}
+          animate={{opacity: 1}}
+          exit={{opacity: 0}}>
+          {label1}
+        </MotiText>
+      ) : (
+        <MotiText
+          key={'label2'}
+          style={styles.title}
+          from={{opacity: 0}}
+          animate={{opacity: 1}}
+          exit={{opacity: 0}}>
+          {label2}
+        </MotiText>
+      )}
+    </AnimatePresence>
+  );
+};
+
+const AnimatedInput = ({
+  onChangeText,
+  placeholder,
+  secureTextEntry = false,
+  value,
+  isVisible = true,
+  transition,
+  exitTransition,
+}: AnimatedInputProps) => {
+  return (
+    <AnimatePresence exitBeforeEnter>
+      {isVisible && (
+        <MotiView
+          style={styles.inputContainer}
+          from={{opacity: 0, translateY: -50}}
+          animate={{opacity: 1, translateY: 0}}
+          exit={{opacity: 0, translateY: -50}}
+          transition={transition}
+          exitTransition={exitTransition}>
+          <TextInput
+            style={[styles.input, styles.shadow]}
+            placeholder={placeholder}
+            placeholderTextColor={Colors.gray_400}
+            onChangeText={onChangeText}
+            secureTextEntry={secureTextEntry}
+            value={value}
+          />
+        </MotiView>
+      )}
+    </AnimatePresence>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -125,6 +252,11 @@ const styles = StyleSheet.create({
     color: Colors.white,
     fontSize: 28,
     fontFamily: Fonts.urbanist_800,
+  },
+  inputContainer: {
+    width: '100%',
+    alignItems: 'center',
+    // backgroundColor: 'red',
   },
   input: {
     width: '80%',
