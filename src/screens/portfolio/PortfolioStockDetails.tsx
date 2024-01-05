@@ -33,6 +33,7 @@ import EditPortfolioStockModal from '../../components/modals/EditPortfolioStockM
 import TargetCard from '../../components/cards/TargetCard';
 import TradeDetails from '../../components/texts/TradeDetails';
 import StockPricesCard from '../../components/cards/StockPricesCard';
+import {API_URL} from '@env';
 
 interface Props {
   navigation: any;
@@ -55,7 +56,7 @@ const PortfolioStockDetails = ({route, navigation}: Props) => {
           .utc(Date)
           .tz('Asia/Kolkata')
           .format('YYYY-MM-DD');
-        const apiUrl = `https://stock-market-lo24myw5sq-el.a.run.app/data?ticker=${Symbol}&date=${istTimestamp}&qty=${quantityy}`;
+        const apiUrl = `${API_URL}/data?ticker=${Symbol}&date=${istTimestamp}&qty=${quantityy}`;
 
         const response = await axios.get(apiUrl);
 
