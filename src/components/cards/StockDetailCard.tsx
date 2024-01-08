@@ -20,29 +20,31 @@ const StockDetailCard = ({item, onPress}: Props) => {
   const {Symbol, Date, High, PercentageChange, logo} = item;
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={['#F2FBFF', '#dceff7', '#EDF7FF']}
-        start={{x: 0, y: 0}}
-        end={{x: 1, y: 0}}
-        style={styles.gradientContainer}>
-        <TouchableOpacity onPress={onPress} style={styles.buttonContainer}>
-          <View style={styles.stockDetailsContainer}>
-            <Image
-              source={logo ? {uri: logo} : Images.apple}
-              style={styles.stockIcon}
-              resizeMode="contain"
-            />
-            <View style={styles.stockLabelContainer}>
-              <Text style={styles.stockName}>{Symbol}</Text>
-              <Text style={styles.stockDate}>{formatedDate(Date)}</Text>
+      <View style={styles.shadow}>
+        <LinearGradient
+          colors={['#F2FBFF', '#dceff7', '#EDF7FF']}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 0}}
+          style={styles.gradientContainer}>
+          <TouchableOpacity onPress={onPress} style={styles.buttonContainer}>
+            <View style={styles.stockDetailsContainer}>
+              <Image
+                source={logo ? {uri: logo} : Images.apple}
+                style={styles.stockIcon}
+                resizeMode="contain"
+              />
+              <View style={styles.stockLabelContainer}>
+                <Text style={styles.stockName}>{Symbol}</Text>
+                <Text style={styles.stockDate}>{formatedDate(Date)}</Text>
+              </View>
             </View>
-          </View>
-          <View style={styles.stockPriceContainer}>
-            <Text style={styles.percentageChange}>+{PercentageChange}%</Text>
-            <Text style={styles.priceChange}>{High}</Text>
-          </View>
-        </TouchableOpacity>
-      </LinearGradient>
+            <View style={styles.stockPriceContainer}>
+              <Text style={styles.percentageChange}>+{PercentageChange}%</Text>
+              <Text style={styles.priceChange}>{High}</Text>
+            </View>
+          </TouchableOpacity>
+        </LinearGradient>
+      </View>
     </View>
   );
 };
@@ -51,8 +53,12 @@ export default StockDetailCard;
 
 const styles = StyleSheet.create({
   container: {
-    // backgroundColor: Colors.white,
     paddingHorizontal: responsiveWidth(5.3),
+    marginBottom: 10,
+    borderRadius: 8,
+  },
+  shadow: {
+    backgroundColor: Colors.white,
     shadowOffset: {
       height: 0,
       width: 0,
@@ -68,8 +74,6 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
     paddingLeft: 14,
     paddingRight: 20,
-    marginBottom: 10,
-    borderRadius: 8,
   },
   buttonContainer: {
     flexDirection: 'row',
