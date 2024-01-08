@@ -4,9 +4,9 @@ import Colors from '../../utils/Colors';
 import Fonts from '../../utils/Fonts';
 
 interface Props {
-  targetLabel: string;
-  target: number | undefined;
-  stopLoss: number | undefined;
+  targetLabel?: string;
+  target?: number | undefined;
+  stopLoss?: number | undefined;
   seperator?: boolean;
   isAchieved: boolean | undefined;
 }
@@ -20,16 +20,18 @@ const TargetCard = ({
 }: Props) => {
   return (
     <View style={styles.container}>
-      <View style={styles.targetContainer}>
-        <Text style={styles.targetLabel}>{targetLabel}</Text>
-        {isAchieved && (
-          <View style={styles.achievedContainer}>
-            <Text style={styles.achievedLabel}>Achieved</Text>
-          </View>
-        )}
-        <Text style={styles.targetLabel}>₹ {target || '--'}</Text>
-      </View>
-      {!isAchieved && (
+      {!stopLoss && (
+        <View style={styles.targetContainer}>
+          <Text style={styles.targetLabel}>{targetLabel}</Text>
+          {isAchieved && (
+            <View style={styles.achievedContainer}>
+              <Text style={styles.achievedLabel}>Achieved</Text>
+            </View>
+          )}
+          <Text style={styles.targetLabel}>₹ {target || '--'}</Text>
+        </View>
+      )}
+      {!isAchieved && stopLoss && (
         <View style={styles.targetContainer}>
           <Text style={styles.stopLossLabel}>Stop Loss</Text>
           <Text style={styles.stopLossLabel}>₹ {stopLoss || '--'}</Text>
@@ -69,15 +71,15 @@ const styles = StyleSheet.create({
   achievedContainer: {
     paddingHorizontal: 15,
     paddingVertical: 8,
-    backgroundColor: Colors.green_100,
-    borderRadius: 8,
+    backgroundColor: Colors.green_500,
+    borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
-    borderColor: Colors.green_700,
+    // borderColor: Colors.green_700,
     // borderWidth: 0.5,
   },
   achievedLabel: {
-    color: Colors.green_700,
+    color: Colors.white,
     fontSize: 14,
     fontFamily: Fonts.urbanist_600,
   },

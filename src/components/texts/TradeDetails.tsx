@@ -7,12 +7,13 @@ interface Props {
   label: string | number | undefined;
   value: string | number | undefined;
   isAmount?: boolean;
+  textStyle?: any;
 }
 
-const TradeDetails = ({label, value, isAmount = true}: Props) => {
+const TradeDetails = ({label, value, isAmount = true, textStyle}: Props) => {
   return (
     <View>
-      <Text style={styles.currentPriceLabel}>
+      <Text style={[styles.currentPriceLabel, textStyle]}>
         {label}: {isAmount ? '₹' : ''} {value || '--'}
       </Text>
     </View>

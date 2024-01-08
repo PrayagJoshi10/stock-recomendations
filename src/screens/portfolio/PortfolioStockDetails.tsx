@@ -34,6 +34,7 @@ import TargetCard from '../../components/cards/TargetCard';
 import TradeDetails from '../../components/texts/TradeDetails';
 import StockPricesCard from '../../components/cards/StockPricesCard';
 import {API_URL} from '@env';
+import InvestmentDetailsCard from '../../components/cards/InvestmentDetailsCard';
 
 interface Props {
   navigation: any;
@@ -129,43 +130,41 @@ const PortfolioStockDetails = ({route, navigation}: Props) => {
             <>
               <View style={styles.targetDetailsContainer}>
                 <View style={styles.editContainer}>
-                  <View style={styles.priceDetailsContainer}>
-                    <TradeDetails label={'Buy Price'} value={pricee} />
-                    <TradeDetails
-                      label={'Current Price'}
-                      value={data?.Stock?.Values?.LTP}
-                    />
-                    <TradeDetails
-                      label={'Total Investment'}
-                      value={calculateTotalInvestment(pricee, quantityy)}
-                    />
-                    <TradeDetails
-                      label={'Current Investment'}
-                      value={calculateCurrentInvestment(
-                        data?.Stock?.Values?.LTP,
-                        quantityy,
-                      )}
-                    />
-                    <TradeDetails
-                      label={'Current P/L'}
-                      value={`${calculateCurrentProfit(
-                        pricee,
-                        data?.Stock?.Values?.LTP,
-                        quantityy,
-                      )}  (${calculateCurrentGains(
-                        pricee,
-                        data?.Stock?.Values?.LTP,
-                        quantityy,
-                      )}%)`}
-                    />
-                  </View>
+                  <Text style={styles.noEntryLabel}>Investment Details</Text>
                   <TouchableOpacity
                     style={styles.editButton}
                     onPress={() => setModalVisible(true)}>
                     <View style={styles.editButtonContainer}>
-                      <Text style={styles.editButtonLabel}>Edit</Text>
+                      <Image
+                        source={Images.edit}
+                        style={styles.editIcon}
+                        resizeMode="contain"
+                      />
                     </View>
                   </TouchableOpacity>
+                </View>
+                <View style={styles.investmentDetails}>
+                  <InvestmentDetailsCard
+                    BuyPrice={pricee}
+                    CurrentPrice={data?.Stock?.Values?.LTP}
+                    TotalInvenstment={calculateTotalInvestment(
+                      pricee,
+                      quantityy,
+                    )}
+                    CurrentInvestment={calculateCurrentInvestment(
+                      data?.Stock?.Values?.LTP,
+                      quantityy,
+                    )}
+                    Current_PnL={`${calculateCurrentProfit(
+                      pricee,
+                      data?.Stock?.Values?.LTP,
+                      quantityy,
+                    )}  (${calculateCurrentGains(
+                      pricee,
+                      data?.Stock?.Values?.LTP,
+                      quantityy,
+                    )}%)`}
+                  />
                 </View>
                 <LinearGradient
                   colors={['#F2FBFF', '#dceff7', '#EDF7FF']}
@@ -175,20 +174,22 @@ const PortfolioStockDetails = ({route, navigation}: Props) => {
                   <TargetCard
                     targetLabel="Target Price 1"
                     target={data?.Stock?.Values?.Target1}
-                    stopLoss={data?.Stock?.Values?.SL}
                     seperator={true}
                     isAchieved={data?.TGT1 ? true : false}
                   />
                   <TargetCard
                     targetLabel="Target Price 2"
                     target={data?.Stock?.Values?.Target2}
-                    stopLoss={data?.Stock?.Values?.SL}
                     seperator={true}
                     isAchieved={data?.TGT2 ? true : false}
                   />
                   <TargetCard
                     targetLabel="Target Price 3"
                     target={data?.Stock?.Values?.Target3}
+                    seperator={true}
+                    isAchieved={data?.TGT3 ? true : false}
+                  />
+                  <TargetCard
                     stopLoss={data?.Stock?.Values?.SL}
                     isAchieved={data?.TGT3 ? true : false}
                   />
@@ -198,12 +199,13 @@ const PortfolioStockDetails = ({route, navigation}: Props) => {
                 <TradeDetails
                   label={'Total Profit'}
                   value={data?.TotalProfit?.Profit}
+                  textStyle={{color: Colors.green_700}}
                 />
-                <TradeDetails
+                {/* <TradeDetails
                   label={'Trade Status'}
                   value={data?.Entry?.['Trade Status']}
                   isAmount={false}
-                />
+                /> */}
               </View>
             </>
           )}
@@ -294,20 +296,24 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   editButton: {},
+  editIcon: {
+    height: responsiveHeight(3),
+    minHeight: 20,
+    width: responsiveHeight(3),
+    minWidth: 20,
+  },
   editButtonContainer: {
-    paddingHorizontal: 15,
-    paddingVertical: 8,
-    backgroundColor: Colors.green_100,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderColor: Colors.green_700,
-    borderWidth: 0.5,
+    backgroundColor: 'rgba(107, 114, 128, 0.04)',
+    borderRadius: 16,
+    padding: 10,
   },
   editButtonLabel: {
     color: Colors.green_700,
     fontSize: 14,
     fontFamily: Fonts.urbanist_600,
+  },
+  investmentDetails: {
+    marginBottom: 30,
   },
   gradientContainer: {
     padding: 20,

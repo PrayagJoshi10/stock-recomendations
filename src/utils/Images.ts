@@ -8,6 +8,7 @@ const Images = {
   account: require('../assets/images/Account.png'),
   back: require('../assets/images/Back.png'),
   cross: require('../assets/images/Cross.png'),
+  edit: require('../assets/images/Edit.png'),
 };
 
 export default Images;
