@@ -93,6 +93,7 @@ const Home = ({navigation}: props) => {
   };
   const handleOpenPress = () => {
     setQuantity('');
+    setError('');
     bottomSheetRef.current?.snapToIndex(0);
   };
   const renderBackdrop = useCallback(
@@ -137,7 +138,6 @@ const Home = ({navigation}: props) => {
       });
       await setData('portfolio-items', portfolioList);
       setQuantity('');
-      setError('');
       Alert.alert('Success', 'Added to portfolio succesfully.', [
         {text: 'OK', onPress: () => handleClosePress()},
       ]);
