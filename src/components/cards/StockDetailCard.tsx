@@ -16,9 +16,10 @@ interface Props {
   item: StockListResponse;
   index: number;
   onPress: () => void;
+  onLongPress: () => void;
 }
 
-const StockDetailCard = ({item, index, onPress}: Props) => {
+const StockDetailCard = ({item, index, onPress, onLongPress}: Props) => {
   const {Symbol, Date, High, PercentageChange, logo} = item;
   return (
     <MotiView
@@ -34,7 +35,10 @@ const StockDetailCard = ({item, index, onPress}: Props) => {
             start={{x: 0, y: 0}}
             end={{x: 1, y: 0}}
             style={styles.gradientContainer}>
-            <TouchableOpacity onPress={onPress} style={styles.buttonContainer}>
+            <TouchableOpacity
+              onPress={onPress}
+              onLongPress={onLongPress}
+              style={styles.buttonContainer}>
               <View style={styles.stockDetailsContainer}>
                 <Image
                   source={logo ? {uri: logo} : Images.apple}

@@ -1,11 +1,12 @@
-import {StyleSheet, View} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import {StyleSheet, Text, View} from 'react-native';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import Header from '../../components/headers/Header';
 import WelcomeCard from '../../components/cards/WelcomeCard';
 import StockList from '../../components/lists/StockList';
 import {StockListResponse} from '../../utils/Types';
 import axios, {AxiosResponse} from 'axios';
 import {API_URL} from '@env';
+import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet';
 
 interface props {
   navigation: any;
@@ -31,6 +32,27 @@ const Home = ({navigation}: props) => {
 
     fetchData();
   }, []);
+
+  const bottomSheetRef = useRef<BottomSheet>(null);
+  const snapPoints = useMemo(() => ['35%', '35%'], []);
+
+  const handleClosePress = () => {
+    if (bottomSheetRef.current) {
+      bottomSheetRef.current.close();
+    }
+  };
+  const handleOpenPress = () => bottomSheetRef.current?.expand();
+  const renderBackdrop = useCallback(
+    (props: any) => (
+      <BottomSheetBackdrop
+        {...props}
+        disappearsOnIndex={-1}
+        appearsOnIndex={0}
+      />
+    ),
+    [],
+  );
+
   return (
     <View style={styles.container}>
       <Header
@@ -39,7 +61,25 @@ const Home = ({navigation}: props) => {
         }}
       />
       <WelcomeCard onPress={() => console.log('Invest Today')} />
-      <StockList data={data} navigation={navigation} loading={loading} />
+      <StockList
+        data={data}
+        navigation={navigation}
+        loading={loading}
+        onLongPress={item => {
+          console.log(item);
+          handleOpenPress();
+        }}
+      />
+      <BottomSheet
+        ref={bottomSheetRef}
+        index={-1}
+        snapPoints={snapPoints}
+        backdropComponent={renderBackdrop}
+        enablePanDownToClose={true}>
+        <View>
+          <Text>Hello</Text>
+        </View>
+      </BottomSheet>
     </View>
   );
 };

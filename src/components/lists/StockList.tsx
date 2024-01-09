@@ -13,9 +13,10 @@ interface Props {
   data: StockListResponse[];
   navigation: NavigationProp<ParamListBase>;
   loading: boolean;
+  onLongPress: (item: any) => void;
 }
 
-const StockList = ({data, navigation, loading}: Props) => {
+const StockList = ({data, navigation, loading, onLongPress}: Props) => {
   return (
     <View style={styles.container}>
       {!loading && (
@@ -31,6 +32,9 @@ const StockList = ({data, navigation, loading}: Props) => {
                     item: item,
                   })
                 }
+                onLongPress={() => {
+                  onLongPress(item);
+                }}
               />
             );
           }}
