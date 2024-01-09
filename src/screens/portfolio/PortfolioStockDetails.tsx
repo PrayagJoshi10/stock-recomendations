@@ -116,98 +116,118 @@ const PortfolioStockDetails = ({route, navigation}: Props) => {
               </Text>
             </View>
           </View>
+          <View style={styles.statusContainer}>
+            <Text style={styles.status}>Status:</Text>
+            <Text
+              style={[
+                styles.status,
+                data?.Stock?.Status === 'Active'
+                  ? styles.active
+                  : data?.Stock?.Status === 'Closed'
+                  ? styles.closed
+                  : {},
+              ]}>
+              {data?.Stock?.Status || '--'}
+            </Text>
+          </View>
           <StockPricesCard
             Open={data?.Stock?.Values?.Open}
             Close={data?.Stock?.Values?.Close}
             High={data?.Stock?.Values?.High}
             Low={data?.Stock?.Values?.Low}
           />
-          {data?.Info === "Don't buy stock right now...." ? (
-            <View style={styles.noEntryContainer}>
-              <Text style={styles.noEntryLabel}>No Entry for this trade.</Text>
-            </View>
-          ) : (
-            <>
-              <View style={styles.targetDetailsContainer}>
-                <View style={styles.editContainer}>
-                  <Text style={styles.noEntryLabel}>Investment Details</Text>
-                  <TouchableOpacity
-                    style={styles.editButton}
-                    onPress={() => setModalVisible(true)}>
-                    <View style={styles.editButtonContainer}>
-                      <Image
-                        source={Images.edit}
-                        style={styles.editIcon}
-                        resizeMode="contain"
-                      />
-                    </View>
-                  </TouchableOpacity>
-                </View>
-                <View style={styles.investmentDetails}>
-                  <InvestmentDetailsCard
-                    BuyPrice={pricee}
-                    CurrentPrice={data?.Stock?.Values?.LTP}
-                    TotalInvenstment={calculateTotalInvestment(
-                      pricee,
-                      quantityy,
-                    )}
-                    CurrentInvestment={calculateCurrentInvestment(
-                      data?.Stock?.Values?.LTP,
-                      quantityy,
-                    )}
-                    Current_PnL={`${calculateCurrentProfit(
-                      pricee,
-                      data?.Stock?.Values?.LTP,
-                      quantityy,
-                    )}  (${calculateCurrentGains(
-                      pricee,
-                      data?.Stock?.Values?.LTP,
-                      quantityy,
-                    )}%)`}
-                  />
-                </View>
-                <LinearGradient
-                  colors={['#F2FBFF', '#dceff7', '#EDF7FF']}
-                  start={{x: 0, y: 0}}
-                  end={{x: 1, y: 0}}
-                  style={styles.gradientContainer}>
-                  <TargetCard
-                    targetLabel="Target Price 1"
-                    target={data?.Stock?.Values?.Target1}
-                    seperator={true}
-                    isAchieved={data?.TGT1 ? true : false}
-                  />
-                  <TargetCard
-                    targetLabel="Target Price 2"
-                    target={data?.Stock?.Values?.Target2}
-                    seperator={true}
-                    isAchieved={data?.TGT2 ? true : false}
-                  />
-                  <TargetCard
-                    targetLabel="Target Price 3"
-                    target={data?.Stock?.Values?.Target3}
-                    seperator={true}
-                    isAchieved={data?.TGT3 ? true : false}
-                  />
-                  <TargetCard
-                    stopLoss={data?.Stock?.Values?.SL}
-                    isAchieved={data?.TGT3 ? true : false}
-                  />
-                </LinearGradient>
+          {!loading ? (
+            data?.Info === "Don't buy stock right now...." ? (
+              <View style={styles.noEntryContainer}>
+                <Text style={styles.noEntryLabel}>
+                  No Entry for this trade.
+                </Text>
               </View>
-              <View style={styles.profitDetailContainer}>
-                <TradeDetails
-                  label={'Total Profit'}
-                  value={data?.TotalProfit?.Profit}
-                  textStyle={{color: Colors.green_700}}
-                />
-                {/* <TradeDetails
+            ) : (
+              <>
+                <View style={styles.targetDetailsContainer}>
+                  <View style={styles.editContainer}>
+                    <Text style={styles.noEntryLabel}>Investment Details</Text>
+                    <TouchableOpacity
+                      style={styles.editButton}
+                      onPress={() => setModalVisible(true)}>
+                      <View style={styles.editButtonContainer}>
+                        <Image
+                          source={Images.edit}
+                          style={styles.editIcon}
+                          resizeMode="contain"
+                        />
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                  <View style={styles.investmentDetails}>
+                    <InvestmentDetailsCard
+                      BuyPrice={pricee}
+                      CurrentPrice={data?.Stock?.Values?.LTP}
+                      TotalInvenstment={calculateTotalInvestment(
+                        pricee,
+                        quantityy,
+                      )}
+                      CurrentInvestment={calculateCurrentInvestment(
+                        data?.Stock?.Values?.LTP,
+                        quantityy,
+                      )}
+                      Current_PnL={`${calculateCurrentProfit(
+                        pricee,
+                        data?.Stock?.Values?.LTP,
+                        quantityy,
+                      )}  (${calculateCurrentGains(
+                        pricee,
+                        data?.Stock?.Values?.LTP,
+                        quantityy,
+                      )}%)`}
+                    />
+                  </View>
+                  <LinearGradient
+                    colors={['#F2FBFF', '#dceff7', '#EDF7FF']}
+                    start={{x: 0, y: 0}}
+                    end={{x: 1, y: 0}}
+                    style={styles.gradientContainer}>
+                    <TargetCard
+                      targetLabel="Target Price 1"
+                      target={data?.Stock?.Values?.Target1}
+                      seperator={true}
+                      isAchieved={data?.TGT1 ? true : false}
+                    />
+                    <TargetCard
+                      targetLabel="Target Price 2"
+                      target={data?.Stock?.Values?.Target2}
+                      seperator={true}
+                      isAchieved={data?.TGT2 ? true : false}
+                    />
+                    <TargetCard
+                      targetLabel="Target Price 3"
+                      target={data?.Stock?.Values?.Target3}
+                      seperator={true}
+                      isAchieved={data?.TGT3 ? true : false}
+                    />
+                    <TargetCard
+                      stopLoss={data?.Stock?.Values?.SL}
+                      isAchieved={data?.TGT3 ? true : false}
+                    />
+                  </LinearGradient>
+                </View>
+                <View style={styles.profitDetailContainer}>
+                  <TradeDetails
+                    label={'Total Profit'}
+                    value={data?.TotalProfit?.Profit}
+                    textStyle={{color: Colors.green_700}}
+                  />
+                  {/* <TradeDetails
                   label={'Trade Status'}
                   value={data?.Entry?.['Trade Status']}
                   isAmount={false}
                 /> */}
-              </View>
-            </>
+                </View>
+              </>
+            )
+          ) : (
+            <></>
           )}
           {loading && <Loader />}
           <EditPortfolioStockModal
@@ -281,6 +301,24 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: Fonts.urbanist_500,
     textAlign: 'right',
+  },
+  statusContainer: {
+    paddingHorizontal: responsiveWidth(5.3),
+    marginTop: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+  },
+  status: {
+    color: Colors.gray_700,
+    fontSize: 16,
+    fontFamily: Fonts.urbanist_600,
+  },
+  active: {
+    color: Colors.green_700,
+  },
+  closed: {
+    color: Colors.red_600,
   },
   targetDetailsContainer: {
     paddingHorizontal: responsiveWidth(5.3),

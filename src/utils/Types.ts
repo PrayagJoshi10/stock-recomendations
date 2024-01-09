@@ -59,6 +59,7 @@ export interface StockInfo {
     Logo: string;
     Name: string;
     Values: Values;
+    Status: string;
   };
   TGT1: {
     Date: string;
