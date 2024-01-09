@@ -29,16 +29,6 @@ interface AnimatedTextProps {
   style?: any;
 }
 
-interface AnimatedInputProps {
-  onChangeText: (text: string) => void;
-  placeholder: string;
-  secureTextEntry?: boolean;
-  value: string;
-  isVisible?: boolean;
-  transition?: any;
-  exitTransition?: any;
-}
-
 const LoginSignup = ({navigation}: Props) => {
   const [error, setError] = useState<string>('');
   const [email, setEmail] = useState<string>('');
@@ -91,16 +81,12 @@ const LoginSignup = ({navigation}: Props) => {
       setError('Incorrect Email or Password !');
     }
   };
-  // useEffect(() => {
-  //   titleAnimationState.transitionTo('show');
-  // }, [titleAnimationState]);
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       keyboardVerticalOffset={-100}
       style={styles.container}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        {/* <StatusBar backgroundColor={'#EC9FE9'} /> */}
         <LinearGradient
           colors={['#6A82FF', '#00A9F1', '#FFFFFF']}
           style={styles.gradierntContainer}>
@@ -117,13 +103,12 @@ const LoginSignup = ({navigation}: Props) => {
                 animate={{opacity: 1, translateY: 0}}
                 transition={{type: 'timing', delay: 100}}>
                 <TextInput
-                  style={[styles.input, styles.shadow]}
+                  style={styles.input}
                   placeholder="Email"
                   placeholderTextColor={Colors.gray_400}
                   onChangeText={text => {
                     handleTextChange(text, setEmail);
                   }}
-                  // secureTextEntry={true}
                   value={email}
                 />
               </MotiView>
@@ -133,7 +118,7 @@ const LoginSignup = ({navigation}: Props) => {
                 animate={{opacity: 1, translateY: 0}}
                 transition={{type: 'timing', delay: 200}}>
                 <TextInput
-                  style={[styles.input, styles.shadow]}
+                  style={styles.input}
                   placeholder="Password"
                   placeholderTextColor={Colors.gray_400}
                   onChangeText={text => {
@@ -152,7 +137,7 @@ const LoginSignup = ({navigation}: Props) => {
                     exit={{opacity: 0}}
                     transition={{type: 'timing', duration: 1000}}>
                     <TextInput
-                      style={[styles.input, styles.shadow]}
+                      style={styles.input}
                       placeholder="Name"
                       placeholderTextColor={Colors.gray_400}
                       onChangeText={text => {
@@ -167,7 +152,7 @@ const LoginSignup = ({navigation}: Props) => {
 
             <Text style={styles.error}>{error}</Text>
             <TouchableOpacity
-              style={[styles.loginButtonContainer, styles.shadow]}
+              style={styles.loginButtonContainer}
               onPress={onLogin}>
               <AnimatedText
                 label1="Login"
