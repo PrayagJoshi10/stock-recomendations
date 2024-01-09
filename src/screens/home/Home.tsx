@@ -7,7 +7,12 @@ import {StockListResponse} from '../../utils/Types';
 import axios, {AxiosResponse} from 'axios';
 import {API_URL} from '@env';
 import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet';
+import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 
+const options = {
+  enableVibrateFallback: true,
+  ignoreAndroidSystemSettings: true,
+};
 interface props {
   navigation: any;
 }
@@ -66,8 +71,8 @@ const Home = ({navigation}: props) => {
         navigation={navigation}
         loading={loading}
         onLongPress={item => {
-          console.log(item);
           handleOpenPress();
+          ReactNativeHapticFeedback.trigger('impactMedium', options);
         }}
       />
       <BottomSheet
