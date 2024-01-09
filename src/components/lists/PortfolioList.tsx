@@ -19,10 +19,11 @@ const PortfolioList = ({data, navigation, onPress}: Props) => {
       {data.length > 0 ? (
         <FlatList
           data={data}
-          renderItem={({item}) => {
+          renderItem={({item, index}) => {
             return (
               <PortfolioCard
                 item={item}
+                index={index}
                 onPress={() =>
                   navigation.navigate(
                     ROUTES.PORTFOLIOSTACK.PORTFOLIO_STOCK_DETAILS,

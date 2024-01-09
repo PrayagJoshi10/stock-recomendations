@@ -10,42 +10,53 @@ import Fonts from '../../utils/Fonts';
 import LinearGradient from 'react-native-linear-gradient';
 import {formatedDate} from '../../utils/Helper';
 import {StockListResponse} from '../../utils/Types';
+import {MotiView} from 'moti';
 
 interface Props {
   item: StockListResponse;
+  index: number;
   onPress: () => void;
 }
 
-const StockDetailCard = ({item, onPress}: Props) => {
+const StockDetailCard = ({item, index, onPress}: Props) => {
   const {Symbol, Date, High, PercentageChange, logo} = item;
   return (
-    <View style={styles.container}>
-      <View style={styles.shadow}>
-        <LinearGradient
-          colors={['#F2FBFF', '#dceff7', '#EDF7FF']}
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 0}}
-          style={styles.gradientContainer}>
-          <TouchableOpacity onPress={onPress} style={styles.buttonContainer}>
-            <View style={styles.stockDetailsContainer}>
-              <Image
-                source={logo ? {uri: logo} : Images.apple}
-                style={styles.stockIcon}
-                resizeMode="contain"
-              />
-              <View style={styles.stockLabelContainer}>
-                <Text style={styles.stockName}>{Symbol}</Text>
-                <Text style={styles.stockDate}>{formatedDate(Date)}</Text>
+    <MotiView
+      from={{opacity: 0, translateY: 50}}
+      animate={{opacity: 1, translateY: 0}}
+      transition={{
+        delay: 1000 + index * 100,
+      }}>
+      <View style={styles.container}>
+        <View style={styles.shadow}>
+          <LinearGradient
+            colors={['#F2FBFF', '#dceff7', '#EDF7FF']}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 0}}
+            style={styles.gradientContainer}>
+            <TouchableOpacity onPress={onPress} style={styles.buttonContainer}>
+              <View style={styles.stockDetailsContainer}>
+                <Image
+                  source={logo ? {uri: logo} : Images.apple}
+                  style={styles.stockIcon}
+                  resizeMode="contain"
+                />
+                <View style={styles.stockLabelContainer}>
+                  <Text style={styles.stockName}>{Symbol}</Text>
+                  <Text style={styles.stockDate}>{formatedDate(Date)}</Text>
+                </View>
               </View>
-            </View>
-            <View style={styles.stockPriceContainer}>
-              <Text style={styles.percentageChange}>+{PercentageChange}%</Text>
-              <Text style={styles.priceChange}>{High}</Text>
-            </View>
-          </TouchableOpacity>
-        </LinearGradient>
+              <View style={styles.stockPriceContainer}>
+                <Text style={styles.percentageChange}>
+                  +{PercentageChange}%
+                </Text>
+                <Text style={styles.priceChange}>{High}</Text>
+              </View>
+            </TouchableOpacity>
+          </LinearGradient>
+        </View>
       </View>
-    </View>
+    </MotiView>
   );
 };
 

@@ -18,28 +18,31 @@ interface Props {
 const StockList = ({data, navigation, loading}: Props) => {
   return (
     <View style={styles.container}>
-      <FlatList
-        data={data}
-        renderItem={({item}) => {
-          return (
-            <StockDetailCard
-              item={item}
-              onPress={() =>
-                navigation.navigate(ROUTES.HOMESTACK.STOCK_DETAILS, {
-                  item: item,
-                })
-              }
-            />
-          );
-        }}
-        showsVerticalScrollIndicator={false}
-        ListFooterComponent={<View />}
-        ListHeaderComponent={
-          <View style={styles.header}>
-            <Text style={styles.headerLabel}>Todays Recomendations</Text>
-          </View>
-        }
-      />
+      {!loading && (
+        <FlatList
+          data={data}
+          renderItem={({item, index}) => {
+            return (
+              <StockDetailCard
+                item={item}
+                index={index}
+                onPress={() =>
+                  navigation.navigate(ROUTES.HOMESTACK.STOCK_DETAILS, {
+                    item: item,
+                  })
+                }
+              />
+            );
+          }}
+          showsVerticalScrollIndicator={false}
+          ListFooterComponent={<View />}
+          ListHeaderComponent={
+            <View style={styles.header}>
+              <Text style={styles.headerLabel}>Todays Recomendations</Text>
+            </View>
+          }
+        />
+      )}
       {loading && <Loader />}
     </View>
   );
