@@ -83,13 +83,15 @@ const Portfolio = ({navigation}: Props) => {
   return (
     <View style={styles.container}>
       <ScreenHeader title="Portfolio" navigation={navigation} />
-      <PortfolioList
-        data={filteredPortfolioData}
-        navigation={navigation}
-        onPress={() => {
-          handleOpenPress();
-        }}
-      />
+      {!loading && (
+        <PortfolioList
+          data={filteredPortfolioData}
+          navigation={navigation}
+          onPress={() => {
+            handleOpenPress();
+          }}
+        />
+      )}
       <BottomSheet
         ref={bottomSheetRef}
         index={-1}

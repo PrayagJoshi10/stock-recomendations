@@ -1,4 +1,4 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import Images from '../../utils/Images';
 import {
@@ -7,7 +7,7 @@ import {
 } from 'react-native-responsive-dimensions';
 import Colors from '../../utils/Colors';
 import Fonts from '../../utils/Fonts';
-import {MotiView} from 'moti';
+import {MotiText} from 'moti';
 
 interface Props {
   onPress: () => void;
@@ -16,16 +16,13 @@ interface Props {
 const Header = ({onPress}: Props) => {
   return (
     <View style={styles.container}>
-      {/* <Image source={Images.logo} style={styles.logo} resizeMode="contain" /> */}
-      <MotiView
+      <MotiText
         from={{opacity: 0, scale: 0}}
         animate={{opacity: 1, scale: 1}}
-        transition={{
-          type: 'timing',
-          duration: 350,
-        }}>
-        <Text style={styles.logo}>S t o c k</Text>
-      </MotiView>
+        transition={{delay: 300}}
+        style={styles.logo}>
+        S t o c k
+      </MotiText>
       <TouchableOpacity style={styles.button} onPress={onPress}>
         <Image
           source={Images.notification}

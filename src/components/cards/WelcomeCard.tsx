@@ -1,4 +1,4 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import {
   responsiveHeight,
@@ -8,6 +8,7 @@ import Colors from '../../utils/Colors';
 import LinearGradient from 'react-native-linear-gradient';
 import Fonts from '../../utils/Fonts';
 import Images from '../../utils/Images';
+import {MotiImage, MotiText} from 'moti';
 
 interface Props {
   onPress: () => void;
@@ -22,8 +23,20 @@ const WelcomeCard = ({onPress}: Props) => {
         end={{x: 1, y: 0}}
         style={styles.gradierntContainer}>
         <View style={styles.cardDetails}>
-          <Text style={styles.title}>Welcome John👋</Text>
-          <Text style={styles.info}>Make your first investment Today</Text>
+          <MotiText
+            from={{opacity: 0}}
+            animate={{opacity: 1}}
+            transition={{delay: 300}}
+            style={styles.title}>
+            Welcome John👋
+          </MotiText>
+          <MotiText
+            from={{opacity: 0}}
+            animate={{opacity: 1}}
+            transition={{delay: 300}}
+            style={styles.info}>
+            Make your first investment Today
+          </MotiText>
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.button} onPress={onPress}>
               <Text style={styles.butttonLabel}>Invest Today</Text>
@@ -31,7 +44,10 @@ const WelcomeCard = ({onPress}: Props) => {
           </View>
         </View>
       </LinearGradient>
-      <Image
+      <MotiImage
+        from={{opacity: 0, translateY: 50}}
+        animate={{opacity: 1, translateY: 0}}
+        transition={{delay: 300}}
         source={Images.user}
         style={styles.userImage}
         resizeMode="contain"
