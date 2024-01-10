@@ -19,7 +19,7 @@ interface Props {
 }
 
 const PortfolioCard = ({item, index, onPress}: Props) => {
-  const {Symbol, Date, Quantity, Logo} = item;
+  const {Symbol, Date, Quantity, Logo, Level} = item;
 
   return (
     <MotiView
@@ -52,6 +52,11 @@ const PortfolioCard = ({item, index, onPress}: Props) => {
                 <Text style={styles.priceChange}>{Quantity}</Text>
               </View>
             </View>
+            {Level && (
+              <View style={styles.levelContainer}>
+                <Text style={styles.level}>{Level}</Text>
+              </View>
+            )}
           </LinearGradient>
         </View>
       </TouchableOpacity>
@@ -81,7 +86,7 @@ const styles = StyleSheet.create({
   gradientContainer: {
     backgroundColor: Colors.shadow_blue,
     paddingTop: 14,
-    paddingBottom: 20,
+    paddingBottom: 10,
     paddingLeft: 14,
     paddingRight: 20,
   },
@@ -131,5 +136,19 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: Fonts.urbanist_500,
     textAlign: 'right',
+  },
+  levelContainer: {
+    marginTop: 10,
+    paddingHorizontal: 5,
+    paddingVertical: 2,
+    borderRadius: 8,
+    backgroundColor: Colors.shadow_blue,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  level: {
+    color: Colors.blue_600,
+    fontSize: 14,
+    fontFamily: Fonts.urbanist_500,
   },
 });

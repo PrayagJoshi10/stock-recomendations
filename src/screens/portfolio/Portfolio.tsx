@@ -45,10 +45,12 @@ const Portfolio = ({navigation}: Props) => {
   const getJsonData = async () => {
     try {
       const jsonValue = await AsyncStorage.getItem('portfolio-items');
-      setPortfolioData(jsonValue != null ? JSON.parse(jsonValue) : []);
-      setFilteredPortfolioData(jsonValue != null ? JSON.parse(jsonValue) : []);
+      const values = jsonValue != null ? JSON.parse(jsonValue) : [];
+      values.reverse();
+      setPortfolioData(values);
+      setFilteredPortfolioData(values);
       setLoading(false);
-      return jsonValue != null ? JSON.parse(jsonValue) : [];
+      return values;
     } catch (e) {
       // error reading value
       console.log('Error: ', e);

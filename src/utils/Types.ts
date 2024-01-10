@@ -18,6 +18,7 @@ export interface PortfolioCardTypes {
   Quantity: string;
   Price: string;
   Logo: string;
+  Level: string;
 }
 
 interface Values {

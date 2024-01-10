@@ -62,6 +62,17 @@ const PortfolioStockDetails = ({route, navigation}: Props) => {
         const response = await axios.get(apiUrl);
 
         setDataa(response?.data?.StockInfo);
+        // console.log(response?.data?.StockInfo);
+        const portfolioList = await getJsonData('portfolio-items');
+
+        const newPortfolioList = portfolioList.map((item: any) => {
+          if (item.Id === Id) {
+            // Modify the properties of the item as needed
+            item.Level = response?.data?.StockInfo?.Stock?.Levels;
+          }
+          return item;
+        });
+        await setData('portfolio-items', newPortfolioList);
 
         setLoading(false);
       } catch (error) {
@@ -72,7 +83,7 @@ const PortfolioStockDetails = ({route, navigation}: Props) => {
 
     quantityy && fetchData();
     setLoading(true);
-  }, [Date, Quantity, Symbol, quantityy]);
+  }, [Date, Id, Quantity, Symbol, quantityy]);
 
   const onEdit = async (price: string, quantity: string) => {
     const portfolioList = await getJsonData('portfolio-items');
