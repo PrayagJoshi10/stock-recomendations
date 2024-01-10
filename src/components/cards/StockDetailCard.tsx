@@ -20,7 +20,7 @@ interface Props {
 }
 
 const StockDetailCard = ({item, index, onPress, onLongPress}: Props) => {
-  const {Symbol, Date, High, PercentageChange, logo} = item;
+  const {Symbol, Date, High, PercentageChange, logo, Status} = item;
   return (
     <MotiView
       from={{opacity: 0, translateY: 50}}
@@ -57,6 +57,21 @@ const StockDetailCard = ({item, index, onPress, onLongPress}: Props) => {
                 <Text style={styles.priceChange}>{High}</Text>
               </View>
             </TouchableOpacity>
+            <View
+              style={
+                Status === 'Active'
+                  ? styles.statusActiveContainer
+                  : styles.statusPendingContainer
+              }>
+              <Text
+                style={
+                  Status === 'Active'
+                    ? styles.statusActive
+                    : styles.statusPending
+                }>
+                {Status}
+              </Text>
+            </View>
           </LinearGradient>
         </View>
       </View>
@@ -85,15 +100,15 @@ const styles = StyleSheet.create({
   },
   gradientContainer: {
     backgroundColor: Colors.shadow_blue,
-    paddingTop: 14,
-    paddingBottom: 20,
-    paddingLeft: 14,
-    paddingRight: 20,
   },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    paddingTop: 14,
+    paddingBottom: 20,
+    paddingLeft: 14,
+    paddingRight: 20,
   },
   stockDetailsContainer: {
     flexDirection: 'row',
@@ -131,5 +146,37 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: Fonts.urbanist_500,
     textAlign: 'right',
+  },
+  statusActiveContainer: {
+    marginLeft: 14,
+    marginBottom: 10,
+    paddingHorizontal: 5,
+    paddingVertical: 2,
+    borderRadius: 8,
+    backgroundColor: 'rgba(23, 206, 146, 0.15)',
+    width: 70,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  statusPendingContainer: {
+    marginLeft: 14,
+    marginBottom: 10,
+    paddingHorizontal: 5,
+    paddingVertical: 2,
+    borderRadius: 8,
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    width: 70,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  statusActive: {
+    color: Colors.green_500,
+    fontSize: 14,
+    fontFamily: Fonts.urbanist_500,
+  },
+  statusPending: {
+    color: Colors.gray_700,
+    fontSize: 14,
+    fontFamily: Fonts.urbanist_500,
   },
 });
