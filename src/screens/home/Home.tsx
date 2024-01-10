@@ -47,21 +47,21 @@ const Home = ({navigation}: props) => {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ['40%', '70%'], []);
 
+  const fetchData = async () => {
+    try {
+      const response: AxiosResponse<StockListResponse[]> = await axios.get(
+        `${API_URL}/stocks`,
+      );
+
+      setDataa(response?.data);
+      setLoading(false);
+    } catch (err) {
+      console.error('Error fetching data:', err);
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response: AxiosResponse<StockListResponse[]> = await axios.get(
-          `${API_URL}/stocks`,
-        );
-
-        setDataa(response?.data);
-        setLoading(false);
-      } catch (err) {
-        console.error('Error fetching data:', err);
-        setLoading(false);
-      }
-    };
-
     fetchData();
   }, []);
 
@@ -173,6 +173,7 @@ const Home = ({navigation}: props) => {
           handleOpenPress();
           ReactNativeHapticFeedback.trigger('impactMedium', options);
         }}
+        onRefresh={fetchData}
       />
       <BottomSheet
         ref={bottomSheetRef}

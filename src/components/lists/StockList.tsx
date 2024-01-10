@@ -1,4 +1,4 @@
-import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {FlatList, RefreshControl, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {responsiveWidth} from 'react-native-responsive-dimensions';
 import Colors from '../../utils/Colors';
@@ -14,9 +14,25 @@ interface Props {
   navigation: NavigationProp<ParamListBase>;
   loading: boolean;
   onLongPress: (item: any) => void;
+  onRefresh: () => void;
 }
 
-const StockList = ({data, navigation, loading, onLongPress}: Props) => {
+const StockList = ({
+  data,
+  navigation,
+  loading,
+  onLongPress,
+  onRefresh,
+}: Props) => {
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onListRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    onRefresh();
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, [onRefresh]);
   return (
     <View style={styles.container}>
       {!loading && (
@@ -44,6 +60,9 @@ const StockList = ({data, navigation, loading, onLongPress}: Props) => {
             <View style={styles.header}>
               <Text style={styles.headerLabel}>Todays Recomendations</Text>
             </View>
+          }
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onListRefresh} />
           }
         />
       )}
