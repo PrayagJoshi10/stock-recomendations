@@ -29,6 +29,7 @@ import Colors from '../../utils/Colors';
 import Fonts from '../../utils/Fonts';
 import {TextInput} from 'react-native-gesture-handler';
 import {getJsonData, setData} from '../../utils/Helper';
+import {useFocusEffect} from '@react-navigation/native';
 
 const options = {
   enableVibrateFallback: true,
@@ -64,27 +65,29 @@ const Home = ({navigation}: props) => {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      () => {
-        bottomSheetRef.current?.snapToIndex(1);
-      },
-    );
+  useFocusEffect(
+    React.useCallback(() => {
+      const keyboardDidShowListener = Keyboard.addListener(
+        'keyboardDidShow',
+        () => {
+          bottomSheetRef.current?.snapToIndex(1);
+        },
+      );
 
-    const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
-      () => {
-        bottomSheetRef.current?.snapToIndex(0);
-      },
-    );
+      const keyboardDidHideListener = Keyboard.addListener(
+        'keyboardDidHide',
+        () => {
+          bottomSheetRef.current?.snapToIndex(0);
+        },
+      );
 
-    // Cleanup event listeners when the component unmounts
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, []);
+      // Cleanup event listeners when the component unmounts
+      return () => {
+        keyboardDidShowListener.remove();
+        keyboardDidHideListener.remove();
+      };
+    }, []),
+  );
 
   const handleClosePress = () => {
     if (bottomSheetRef.current) {

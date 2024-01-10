@@ -9,7 +9,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import ScreenHeader from '../../components/headers/ScreenHeader';
 import Colors from '../../utils/Colors';
 import Images from '../../utils/Images';
@@ -26,6 +26,7 @@ import {
 import Fonts from '../../utils/Fonts';
 import {PortfolioCardTypes} from '../../utils/Types';
 import StockPricesCard from '../../components/cards/StockPricesCard';
+import {useFocusEffect} from '@react-navigation/native';
 
 interface Props {
   navigation: any;
@@ -49,27 +50,29 @@ const StockDetails = ({route, navigation}: Props) => {
   const [error, setError] = useState<string>('');
   const [isKeyboardOpen, setKeyboardOpen] = useState<boolean>(false);
 
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      () => {
-        setKeyboardOpen(true);
-      },
-    );
+  useFocusEffect(
+    React.useCallback(() => {
+      const keyboardDidShowListener = Keyboard.addListener(
+        'keyboardDidShow',
+        () => {
+          setKeyboardOpen(true);
+        },
+      );
 
-    const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
-      () => {
-        setKeyboardOpen(false);
-      },
-    );
+      const keyboardDidHideListener = Keyboard.addListener(
+        'keyboardDidHide',
+        () => {
+          setKeyboardOpen(false);
+        },
+      );
 
-    // Cleanup event listeners when the component unmounts
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, []);
+      // Cleanup event listeners when the component unmounts
+      return () => {
+        keyboardDidShowListener.remove();
+        keyboardDidHideListener.remove();
+      };
+    }, []),
+  );
 
   const onBuy = async () => {
     if (!quantity && !price) {
