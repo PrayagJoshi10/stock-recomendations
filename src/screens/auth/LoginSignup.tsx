@@ -18,6 +18,7 @@ import {responsiveWidth} from 'react-native-responsive-dimensions';
 import {ROUTES} from '../../navigation/Routes';
 import {setData} from '../../utils/Helper';
 import {AnimatePresence, MotiText, MotiView, useDynamicAnimation} from 'moti';
+import {useFocusEffect} from '@react-navigation/native';
 
 interface Props {
   navigation: any;
@@ -35,6 +36,31 @@ const LoginSignup = ({navigation}: Props) => {
   const [password, setPassword] = useState<string>('');
   const [name, setName] = useState<string>('');
   const [isLogIn, setIsLogIn] = useState<boolean>(true);
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState<boolean>(false);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const keyboardDidShowListener = Keyboard.addListener(
+        'keyboardDidShow',
+        () => {
+          setIsKeyboardOpen(true);
+        },
+      );
+
+      const keyboardDidHideListener = Keyboard.addListener(
+        'keyboardDidHide',
+        () => {
+          setIsKeyboardOpen(false);
+        },
+      );
+
+      // Cleanup event listeners when the component unmounts
+      return () => {
+        keyboardDidShowListener.remove();
+        keyboardDidHideListener.remove();
+      };
+    }, []),
+  );
 
   const loginState = useDynamicAnimation(() => {
     // optional function that returns your initial style
@@ -60,6 +86,10 @@ const LoginSignup = ({navigation}: Props) => {
   };
 
   const onLogin = async () => {
+    if (isKeyboardOpen) {
+      Keyboard.dismiss();
+      return;
+    }
     if (!email && !password) {
       setError('Emai and Password are Required !');
       return;
