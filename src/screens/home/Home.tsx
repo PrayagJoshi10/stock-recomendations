@@ -30,6 +30,7 @@ import Fonts from '../../utils/Fonts';
 import {TextInput} from 'react-native-gesture-handler';
 import {getJsonData, setData} from '../../utils/Helper';
 import {useFocusEffect} from '@react-navigation/native';
+import Images from '../../utils/Images';
 
 const options = {
   enableVibrateFallback: true,
@@ -170,8 +171,10 @@ const Home = ({navigation}: props) => {
         loading={loading}
         onLongPress={item => {
           setSelectedItem(item);
-          handleOpenPress();
-          ReactNativeHapticFeedback.trigger('impactMedium', options);
+          setTimeout(() => {
+            handleOpenPress();
+            ReactNativeHapticFeedback.trigger('impactMedium', options);
+          }, 100);
         }}
         onRefresh={fetchData}
       />
@@ -188,13 +191,17 @@ const Home = ({navigation}: props) => {
             <View style={styles.feedback}>
               <View style={styles.stockDetailsContainer}>
                 <Image
-                  source={{
-                    uri: 'https://assets-netstorage.groww.in/stock-assets/logos/GSTK532947.png',
-                  }}
+                  source={
+                    selectedItem?.logo
+                      ? {
+                          uri: selectedItem?.logo,
+                        }
+                      : Images.apple
+                  }
                   style={styles.image}
                 />
-                <Text style={styles.title}>IRB.NS</Text>
-                <Text style={styles.title}>1000</Text>
+                <Text style={styles.title}>{selectedItem?.Symbol}</Text>
+                <Text style={styles.title}>{selectedItem?.High}</Text>
               </View>
               <View style={styles.inputContainer}>
                 <TextInput
