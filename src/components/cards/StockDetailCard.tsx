@@ -21,7 +21,7 @@ interface Props {
 
 const StockDetailCard = React.memo(
   ({item, index, onPress, onLongPress}: Props) => {
-    const {Symbol, Date, High, PercentageChange, logo, Status} = item;
+    const {Symbol, Date, High, PercentageChange, logo, Status, Industry} = item;
     return (
       <MotiView
         from={{opacity: 0, translateY: 50}}
@@ -58,20 +58,25 @@ const StockDetailCard = React.memo(
                   <Text style={styles.priceChange}>{High}</Text>
                 </View>
               </TouchableOpacity>
-              <View
-                style={
-                  Status === 'Active'
-                    ? styles.statusActiveContainer
-                    : styles.statusPendingContainer
-                }>
-                <Text
+              <View style={styles.bottomContainer}>
+                <View
                   style={
                     Status === 'Active'
-                      ? styles.statusActive
-                      : styles.statusPending
+                      ? styles.statusActiveContainer
+                      : styles.statusPendingContainer
                   }>
-                  {Status}
-                </Text>
+                  <Text
+                    style={
+                      Status === 'Active'
+                        ? styles.statusActive
+                        : styles.statusPending
+                    }>
+                    {Status}
+                  </Text>
+                </View>
+                <View style={styles.industryContainer}>
+                  <Text style={styles.industry}>{Industry}</Text>
+                </View>
               </View>
             </LinearGradient>
           </View>
@@ -149,6 +154,12 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.urbanist_500,
     textAlign: 'right',
   },
+  bottomContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
   statusActiveContainer: {
     marginLeft: 14,
     marginBottom: 10,
@@ -162,7 +173,6 @@ const styles = StyleSheet.create({
   },
   statusPendingContainer: {
     marginLeft: 14,
-    marginBottom: 10,
     paddingHorizontal: 5,
     paddingVertical: 2,
     borderRadius: 8,
@@ -178,6 +188,17 @@ const styles = StyleSheet.create({
   },
   statusPending: {
     color: Colors.gray_700,
+    fontSize: 14,
+    fontFamily: Fonts.urbanist_500,
+  },
+  industryContainer: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 8,
+    backgroundColor: Colors.shadow_blue,
+  },
+  industry: {
+    color: Colors.blue_600,
     fontSize: 14,
     fontFamily: Fonts.urbanist_500,
   },
