@@ -126,7 +126,7 @@ const LoginSignup = ({navigation}: Props) => {
             <MotiView
               state={loginState}
               style={styles.transitionContainer}
-              transition={{duration: 1000}}>
+              transition={{duration: 500}}>
               <MotiView
                 style={styles.inputContainer}
                 from={{opacity: 0, translateY: -50}}
@@ -165,7 +165,7 @@ const LoginSignup = ({navigation}: Props) => {
                     from={{opacity: 0, translateY: -50}}
                     animate={{opacity: 1, translateY: 0}}
                     exit={{opacity: 0}}
-                    transition={{type: 'timing', duration: 1000}}>
+                    transition={{type: 'timing', duration: 500}}>
                     <TextInput
                       style={styles.input}
                       placeholder="Name"
@@ -298,7 +298,7 @@ const styles = StyleSheet.create({
     width: '80%',
     backgroundColor: Colors.white,
     paddingHorizontal: responsiveWidth(7),
-    paddingVertical: 15,
+    paddingVertical: 10,
     fontSize: 16,
     color: Colors.gray_700,
     borderRadius: 28,
