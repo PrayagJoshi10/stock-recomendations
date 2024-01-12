@@ -19,65 +19,67 @@ interface Props {
   onLongPress: () => void;
 }
 
-const StockDetailCard = ({item, index, onPress, onLongPress}: Props) => {
-  const {Symbol, Date, High, PercentageChange, logo, Status} = item;
-  return (
-    <MotiView
-      from={{opacity: 0, translateY: 50}}
-      animate={{opacity: 1, translateY: 0}}
-      transition={{
-        delay: 1000 + index * 100,
-      }}>
-      <View style={styles.container}>
-        <View style={styles.shadow}>
-          <LinearGradient
-            colors={['#F2FBFF', '#dceff7', '#EDF7FF']}
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 0}}
-            style={styles.gradientContainer}>
-            <TouchableOpacity
-              onPress={onPress}
-              onLongPress={onLongPress}
-              style={styles.buttonContainer}>
-              <View style={styles.stockDetailsContainer}>
-                <Image
-                  source={logo ? {uri: logo} : Images.apple}
-                  style={styles.stockIcon}
-                  resizeMode="contain"
-                />
-                <View style={styles.stockLabelContainer}>
-                  <Text style={styles.stockName}>{Symbol}</Text>
-                  <Text style={styles.stockDate}>{formatedDate(Date)}</Text>
+const StockDetailCard = React.memo(
+  ({item, index, onPress, onLongPress}: Props) => {
+    const {Symbol, Date, High, PercentageChange, logo, Status} = item;
+    return (
+      <MotiView
+        from={{opacity: 0, translateY: 50}}
+        animate={{opacity: 1, translateY: 0}}
+        transition={{
+          delay: 1000 + index * 100,
+        }}>
+        <View style={styles.container}>
+          <View style={styles.shadow}>
+            <LinearGradient
+              colors={['#F2FBFF', '#dceff7', '#EDF7FF']}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 0}}
+              style={styles.gradientContainer}>
+              <TouchableOpacity
+                onPress={onPress}
+                onLongPress={onLongPress}
+                style={styles.buttonContainer}>
+                <View style={styles.stockDetailsContainer}>
+                  <Image
+                    source={logo ? {uri: logo} : Images.apple}
+                    style={styles.stockIcon}
+                    resizeMode="contain"
+                  />
+                  <View style={styles.stockLabelContainer}>
+                    <Text style={styles.stockName}>{Symbol}</Text>
+                    <Text style={styles.stockDate}>{formatedDate(Date)}</Text>
+                  </View>
                 </View>
-              </View>
-              <View style={styles.stockPriceContainer}>
-                <Text style={styles.percentageChange}>
-                  +{PercentageChange}%
-                </Text>
-                <Text style={styles.priceChange}>{High}</Text>
-              </View>
-            </TouchableOpacity>
-            <View
-              style={
-                Status === 'Active'
-                  ? styles.statusActiveContainer
-                  : styles.statusPendingContainer
-              }>
-              <Text
+                <View style={styles.stockPriceContainer}>
+                  <Text style={styles.percentageChange}>
+                    +{PercentageChange}%
+                  </Text>
+                  <Text style={styles.priceChange}>{High}</Text>
+                </View>
+              </TouchableOpacity>
+              <View
                 style={
                   Status === 'Active'
-                    ? styles.statusActive
-                    : styles.statusPending
+                    ? styles.statusActiveContainer
+                    : styles.statusPendingContainer
                 }>
-                {Status}
-              </Text>
-            </View>
-          </LinearGradient>
+                <Text
+                  style={
+                    Status === 'Active'
+                      ? styles.statusActive
+                      : styles.statusPending
+                  }>
+                  {Status}
+                </Text>
+              </View>
+            </LinearGradient>
+          </View>
         </View>
-      </View>
-    </MotiView>
-  );
-};
+      </MotiView>
+    );
+  },
+);
 
 export default StockDetailCard;
 

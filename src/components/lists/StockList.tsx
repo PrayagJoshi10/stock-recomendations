@@ -1,5 +1,5 @@
 import {FlatList, RefreshControl, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import React, {useCallback, useMemo} from 'react';
 import {responsiveWidth} from 'react-native-responsive-dimensions';
 import Colors from '../../utils/Colors';
 import Fonts from '../../utils/Fonts';
@@ -26,47 +26,54 @@ const StockList = ({
 }: Props) => {
   const [refreshing, setRefreshing] = React.useState(false);
 
-  const onListRefresh = React.useCallback(() => {
+  const onListRefresh = useCallback(() => {
     setRefreshing(true);
     onRefresh();
     setTimeout(() => {
       setRefreshing(false);
     }, 2000);
   }, [onRefresh]);
+
+  const renderItem = useCallback(
+    ({item, index}: {item: StockListResponse; index: number}) => {
+      return (
+        <StockDetailCard
+          item={item}
+          index={index}
+          onPress={() =>
+            navigation.navigate(ROUTES.HOMESTACK.STOCK_DETAILS, {item})
+          }
+          onLongPress={() => onLongPress(item)}
+        />
+      );
+    },
+    [navigation, onLongPress],
+  );
+
+  const listHeaderComponent = useMemo(
+    () => (
+      <View style={styles.header}>
+        <Text style={styles.headerLabel}>Today's Recommendations</Text>
+      </View>
+    ),
+    [],
+  );
   return (
     <View style={styles.container}>
-      {!loading && (
+      {!loading ? (
         <FlatList
           data={data}
-          renderItem={({item, index}) => {
-            return (
-              <StockDetailCard
-                item={item}
-                index={index}
-                onPress={() =>
-                  navigation.navigate(ROUTES.HOMESTACK.STOCK_DETAILS, {
-                    item: item,
-                  })
-                }
-                onLongPress={() => {
-                  onLongPress(item);
-                }}
-              />
-            );
-          }}
+          renderItem={renderItem}
           showsVerticalScrollIndicator={false}
           ListFooterComponent={<View />}
-          ListHeaderComponent={
-            <View style={styles.header}>
-              <Text style={styles.headerLabel}>Todays Recomendations</Text>
-            </View>
-          }
+          ListHeaderComponent={listHeaderComponent}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onListRefresh} />
           }
         />
+      ) : (
+        <Loader />
       )}
-      {loading && <Loader />}
     </View>
   );
 };

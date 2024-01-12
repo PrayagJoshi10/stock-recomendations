@@ -13,7 +13,7 @@ import Header from '../../components/headers/Header';
 import WelcomeCard from '../../components/cards/WelcomeCard';
 import StockList from '../../components/lists/StockList';
 import {PortfolioCardTypes, StockListResponse} from '../../utils/Types';
-import axios, {AxiosResponse} from 'axios';
+import axios from 'axios';
 import {API_URL} from '@env';
 import BottomSheet, {
   BottomSheetBackdrop,
@@ -28,7 +28,7 @@ import {Image} from 'moti';
 import Colors from '../../utils/Colors';
 import Fonts from '../../utils/Fonts';
 import {TextInput} from 'react-native-gesture-handler';
-import {getJsonData, setData} from '../../utils/Helper';
+import {getJsonData, removeDuplicates, setData} from '../../utils/Helper';
 import {useFocusEffect} from '@react-navigation/native';
 import Images from '../../utils/Images';
 
@@ -48,23 +48,22 @@ const Home = ({navigation}: props) => {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ['40%', '70%'], []);
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
-      const response: AxiosResponse<StockListResponse[]> = await axios.get(
-        `${API_URL}/stocks`,
-      );
-
-      setDataa(response?.data);
+      setLoading(true);
+      const response = await axios.get(`${API_URL}/stocks`);
+      const uniqueData = removeDuplicates(response.data, 'Symbol');
+      setDataa(uniqueData);
       setLoading(false);
     } catch (err) {
       console.error('Error fetching data:', err);
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -82,24 +81,23 @@ const Home = ({navigation}: props) => {
         },
       );
 
-      // Cleanup event listeners when the component unmounts
       return () => {
         keyboardDidShowListener.remove();
         keyboardDidHideListener.remove();
       };
-    }, []),
+    }, [bottomSheetRef]),
   );
 
-  const handleClosePress = () => {
-    if (bottomSheetRef.current) {
-      bottomSheetRef.current.close();
-    }
-  };
-  const handleOpenPress = () => {
+  const handleClosePress = useCallback(() => {
+    bottomSheetRef.current?.close();
+  }, [bottomSheetRef]);
+
+  const handleOpenPress = useCallback(() => {
     setQuantity('');
     setError('');
     bottomSheetRef.current?.snapToIndex(0);
-  };
+  }, [bottomSheetRef]);
+
   const renderBackdrop = useCallback(
     (props: any) => (
       <BottomSheetBackdrop
@@ -111,7 +109,7 @@ const Home = ({navigation}: props) => {
     [],
   );
 
-  const onBuy = async () => {
+  const onBuy = useCallback(async () => {
     if (!quantity) {
       setError('Quantity is required!');
       return;
@@ -148,14 +146,16 @@ const Home = ({navigation}: props) => {
     } catch (err) {
       console.log('Error: ', err);
     }
-  };
+  }, [handleClosePress, quantity, selectedItem]);
 
-  const handleTextChange = (text: string, setText: (text: string) => void) => {
-    setError('');
-    const numericInput = text.replace(/[^0-9.]/g, '');
-    setText(numericInput);
-    return;
-  };
+  const handleTextChange = useCallback(
+    (text: string, setText: (text: string) => void) => {
+      setError('');
+      const numericInput = text.replace(/[^0-9.]/g, '');
+      setText(numericInput);
+    },
+    [setError],
+  );
 
   return (
     <View style={styles.container}>

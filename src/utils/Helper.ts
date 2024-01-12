@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {StockListResponse} from './Types';
 
 export const formatedDate = (date: string) => {
   const inputDate = new Date(date);
@@ -96,4 +97,23 @@ export const calculateCurrentGains = (
   const percentageChange = ((currentValue - buyValue) / buyValue) * 100;
   const percentageChangeUpto2Decimal = percentageChange.toFixed(2);
   return percentageChangeUpto2Decimal;
+};
+
+export const removeDuplicates = (
+  dataArray: StockListResponse[],
+  key: keyof StockListResponse,
+): StockListResponse[] => {
+  const seenValues = new Set();
+  const uniqueData: StockListResponse[] = [];
+
+  for (const data of dataArray) {
+    const value = data[key];
+
+    if (!seenValues.has(value)) {
+      uniqueData.push(data);
+      seenValues.add(value);
+    }
+  }
+
+  return uniqueData;
 };

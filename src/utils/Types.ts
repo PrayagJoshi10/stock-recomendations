@@ -1,15 +1,18 @@
 export interface StockListResponse {
-  Symbol: string;
-  Date: string;
-  Open: number;
-  High: number;
-  Low: number;
   Close: number;
-  RSI: number;
-  Prev_RSI: number;
+  Date: string;
+  High: number;
+  High_T: number;
+  Industry: string;
+  LTP: number;
+  Low: number;
+  Open: number;
   PercentageChange: number;
-  logo: string;
+  Prev_RSI: number;
+  RSI: number;
   Status: string;
+  Symbol: string;
+  logo: string;
 }
 
 export interface PortfolioCardTypes {
