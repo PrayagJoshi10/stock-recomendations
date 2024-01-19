@@ -33,7 +33,7 @@ import EditPortfolioStockModal from '../../components/modals/EditPortfolioStockM
 import TargetCard from '../../components/cards/TargetCard';
 import TradeDetails from '../../components/texts/TradeDetails';
 import StockPricesCard from '../../components/cards/StockPricesCard';
-import {API_URL} from '@env';
+import {API_URL, TOKEN} from '@env';
 import InvestmentDetailsCard from '../../components/cards/InvestmentDetailsCard';
 
 interface Props {
@@ -59,7 +59,11 @@ const PortfolioStockDetails = ({route, navigation}: Props) => {
           .format('YYYY-MM-DD');
         const apiUrl = `${API_URL}/data?ticker=${Symbol}&date=${istTimestamp}&qty=${quantityy}`;
 
-        const response = await axios.get(apiUrl);
+        const response = await axios.get(apiUrl, {
+          headers: {
+            Authorization: `Bearer ${TOKEN}`,
+          },
+        });
 
         setDataa(response?.data?.StockInfo);
         // console.log(response?.data?.StockInfo);

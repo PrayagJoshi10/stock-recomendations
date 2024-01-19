@@ -9,7 +9,7 @@ import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet';
 import {formatedDate, setData} from '../../utils/Helper';
 import Fonts from '../../utils/Fonts';
 import Loader from '../../components/loaders/Loader';
-import {API_URL} from '@env';
+import {API_URL, TOKEN} from '@env';
 import moment from 'moment-timezone';
 import axios from 'axios';
 interface Props {
@@ -57,7 +57,11 @@ const Portfolio = ({navigation}: Props) => {
             .format('YYYY-MM-DD');
           const apiUrl = `${API_URL}/data?ticker=${values[index].Symbol}&date=${istTimestamp}&qty=${values[index].Quantity}`;
 
-          const response = await axios.get(apiUrl);
+          const response = await axios.get(apiUrl, {
+            headers: {
+              Authorization: `Bearer ${TOKEN}`,
+            },
+          });
           values = values.map((item: any) => {
             if (item.Id === values[index].Id) {
               // Modify the properties of the item as needed

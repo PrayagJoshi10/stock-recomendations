@@ -14,7 +14,7 @@ import WelcomeCard from '../../components/cards/WelcomeCard';
 import StockList from '../../components/lists/StockList';
 import {PortfolioCardTypes, StockListResponse} from '../../utils/Types';
 import axios from 'axios';
-import {API_URL} from '@env';
+import {API_URL, TOKEN} from '@env';
 import BottomSheet, {
   BottomSheetBackdrop,
   TouchableOpacity,
@@ -51,7 +51,11 @@ const Home = ({navigation}: props) => {
   const fetchData = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${API_URL}/stocks`);
+      const response = await axios.get(`${API_URL}/stocks`, {
+        headers: {
+          Authorization: `Bearer ${TOKEN}`,
+        },
+      });
       const uniqueData = removeDuplicates(response.data, 'Symbol');
       setDataa(uniqueData);
       setLoading(false);
