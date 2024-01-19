@@ -1,9 +1,16 @@
-import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Alert,
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, {useState, useCallback, useMemo, useRef, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PortfolioList from '../../components/lists/PortfolioList';
 import Colors from '../../utils/Colors';
-import {useFocusEffect} from '@react-navigation/native';
+// import {useFocusEffect} from '@react-navigation/native';
 import ScreenHeader from '../../components/headers/ScreenHeader';
 import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet';
 import {formatedDate, setData} from '../../utils/Helper';
@@ -32,11 +39,15 @@ const Portfolio = ({navigation}: Props) => {
   };
   const handleOpenPress = () => bottomSheetRef.current?.expand();
 
-  useFocusEffect(
-    React.useCallback(() => {
-      getJsonData();
-    }, []),
-  );
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     getJsonData();
+  //   }, []),
+  // );
+
+  useEffect(() => {
+    getJsonData();
+  }, []);
 
   useEffect(() => {
     const uniqueDates = Array.from(
@@ -92,6 +103,17 @@ const Portfolio = ({navigation}: Props) => {
     handleClosePress();
   };
 
+  const onDetele = async (item: any) => {
+    const jsonValue = await AsyncStorage.getItem('portfolio-items');
+    let values = jsonValue != null ? JSON.parse(jsonValue) : [];
+
+    const newValues = values.filter((data: any) => data.Id !== item.Id);
+    newValues.reverse();
+    setPortfolioData(newValues);
+    setFilteredPortfolioData(newValues);
+    await setData('portfolio-items', newValues);
+  };
+
   const clearFilter = () => {
     setSelectedDate('');
     setFilteredPortfolioData(portfolioData);
@@ -118,6 +140,28 @@ const Portfolio = ({navigation}: Props) => {
           navigation={navigation}
           onPress={() => {
             handleOpenPress();
+          }}
+          onLongPress={item => {
+            Alert.alert(
+              'Delete',
+              'Are you sure you want to delete this stock?',
+              [
+                {
+                  style: 'destructive',
+                  text: 'Delete',
+                  onPress: () => {
+                    onDetele(item);
+                  },
+                },
+                {
+                  style: 'cancel',
+                  text: 'Cancel',
+                  onPress: () => {
+                    return;
+                  },
+                },
+              ],
+            );
           }}
         />
       )}

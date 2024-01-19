@@ -11,9 +11,10 @@ interface Props {
   data: PortfolioCardTypes[];
   navigation: any;
   onPress: () => void;
+  onLongPress: (item: PortfolioCardTypes) => void;
 }
 
-const PortfolioList = ({data, navigation, onPress}: Props) => {
+const PortfolioList = ({data, navigation, onPress, onLongPress}: Props) => {
   return (
     <View style={styles.container}>
       {data.length > 0 ? (
@@ -32,6 +33,9 @@ const PortfolioList = ({data, navigation, onPress}: Props) => {
                     },
                   )
                 }
+                onLongPress={() => {
+                  onLongPress(item);
+                }}
               />
             );
           }}

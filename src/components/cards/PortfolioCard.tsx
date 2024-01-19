@@ -16,9 +16,10 @@ interface Props {
   item: PortfolioCardTypes;
   index: number;
   onPress: () => void;
+  onLongPress: () => void;
 }
 
-const PortfolioCard = ({item, index, onPress}: Props) => {
+const PortfolioCard = ({item, index, onPress, onLongPress}: Props) => {
   const {Symbol, Date, Quantity, Logo, Level} = item;
 
   return (
@@ -28,7 +29,10 @@ const PortfolioCard = ({item, index, onPress}: Props) => {
       transition={{
         delay: 1000 + index * 100,
       }}>
-      <TouchableOpacity onPress={onPress} style={styles.container}>
+      <TouchableOpacity
+        onPress={onPress}
+        onLongPress={onLongPress}
+        style={styles.container}>
         <View style={styles.shadow}>
           <LinearGradient
             colors={['#F2FBFF', '#dceff7', '#EDF7FF']}
