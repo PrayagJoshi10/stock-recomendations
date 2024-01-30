@@ -10,7 +10,7 @@ import React, {useState, useCallback, useMemo, useRef, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PortfolioList from '../../components/lists/PortfolioList';
 import Colors from '../../utils/Colors';
-// import {useFocusEffect} from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 import ScreenHeader from '../../components/headers/ScreenHeader';
 import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet';
 import {formatedDate, setData} from '../../utils/Helper';
@@ -39,15 +39,15 @@ const Portfolio = ({navigation}: Props) => {
   };
   const handleOpenPress = () => bottomSheetRef.current?.expand();
 
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     getJsonData();
-  //   }, []),
-  // );
+  useFocusEffect(
+    React.useCallback(() => {
+      getJsonData();
+    }, []),
+  );
 
-  useEffect(() => {
-    getJsonData();
-  }, []);
+  // useEffect(() => {
+  //   getJsonData();
+  // }, []);
 
   useEffect(() => {
     const uniqueDates = Array.from(
@@ -57,33 +57,34 @@ const Portfolio = ({navigation}: Props) => {
   }, [portfolioData]);
 
   const getJsonData = async () => {
+    // setLoading(true);
     try {
       const jsonValue = await AsyncStorage.getItem('portfolio-items');
       let values = jsonValue != null ? JSON.parse(jsonValue) : [];
-      if (values.length > 0) {
-        for (let index = 0; index < values.length; index++) {
-          const istTimestamp = moment
-            .utc(values[index].Date)
-            .tz('Asia/Kolkata')
-            .format('YYYY-MM-DD');
-          const apiUrl = `${API_URL}/data?ticker=${values[index].Symbol}&date=${istTimestamp}&qty=${values[index].Quantity}`;
+      // if (values.length > 0) {
+      //   for (let index = 0; index < values.length; index++) {
+      //     const istTimestamp = moment
+      //       .utc(values[index].Date)
+      //       .tz('Asia/Kolkata')
+      //       .format('YYYY-MM-DD');
+      //     const apiUrl = `${API_URL}/data?ticker=${values[index].Symbol}&date=${istTimestamp}&qty=${values[index].Quantity}`;
 
-          const response = await axios.get(apiUrl, {
-            headers: {
-              Authorization: `Bearer ${TOKEN}`,
-            },
-          });
-          values = values.map((item: any) => {
-            if (item.Id === values[index].Id) {
-              // Modify the properties of the item as needed
-              item.Level = response?.data?.StockInfo?.Stock?.Levels;
-            }
-            return item;
-          });
-        }
+      //     const response = await axios.get(apiUrl, {
+      //       headers: {
+      //         Authorization: `Bearer ${TOKEN}`,
+      //       },
+      //     });
+      //     values = values.map((item: any) => {
+      //       if (item.Id === values[index].Id) {
+      //         // Modify the properties of the item as needed
+      //         item.Level = response?.data?.StockInfo?.Stock?.Levels;
+      //       }
+      //       return item;
+      //     });
+      //   }
 
-        await setData('portfolio-items', values);
-      }
+      //   await setData('portfolio-items', values);
+      // }
       values.reverse();
       setPortfolioData(values);
       setFilteredPortfolioData(values);
